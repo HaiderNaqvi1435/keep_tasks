@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:keep_tasks/Core/Classes/Themes/MyTheme.dart';
 import 'package:keep_tasks/UI/Pages/Items/Drawer.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,7 +13,14 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      backgroundColor: MyThemes.MyTheme.colorScheme.background,
+      appBar: AppBar(
+        backgroundColor: MyThemes.MyTheme.colorScheme.background,
+        elevation: 0,
+        iconTheme:
+            IconThemeData(color: MyThemes.MyTheme.colorScheme.onSecondary),
+            title: Text("Keep "),
+      ),
       drawer: MyDrawer(),
     );
   }

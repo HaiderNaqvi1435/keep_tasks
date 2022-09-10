@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class MyThemes {
   static ThemeData get MyTheme => ThemeData(
+     
         fontFamily: GoogleFonts.lato().fontFamily,
         colorScheme: const ColorScheme(
             brightness: Brightness.light,
@@ -14,7 +15,7 @@ class MyThemes {
             onSecondary: Colors.black,
             error: const Color.fromARGB(255, 195, 44, 33),
             onError: Colors.red,
-            background: const Color.fromARGB(255, 236, 239, 241),
+            background: Colors.white,
             onBackground: Colors.black,
             surface: const Color.fromARGB(255, 224, 224, 224),
             onSurface: Colors.black),

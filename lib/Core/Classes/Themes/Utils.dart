@@ -18,7 +18,7 @@ class Utils {
     return TextStyle(
       color: color ?? Colors.white,
       fontSize: size ?? 16,
-      // fontWeight: FontWeight.bold,
+      fontWeight: FontWeight.bold,
     );
   }
 
