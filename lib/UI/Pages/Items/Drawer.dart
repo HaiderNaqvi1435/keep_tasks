@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:keep_tasks/Core/Classes/Themes/Utils.dart';
 
 import '../../../Core/Classes/Themes/MyTheme.dart';
 
@@ -23,7 +24,61 @@ class _MyDrawerState extends State<MyDrawer> {
               child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Keep Tasks"),
+              Text(
+                "Keep Tasks",
+                style: Utils.appName(),
+              ),
+              Container(
+                child: UserAccountsDrawerHeader(
+                    currentAccountPicture: CircleAvatar(),
+                    accountEmail: Text(
+                      "HaiderNaqvi1435@gmail.com",
+                      style: Utils.metaText(),
+                    ),
+                    accountName: Text(
+                      "Haider Naqvi",
+                      style: Utils.metaText(),
+                    )),
+              ),
+              Divider(
+                height: 0,
+                color: MyThemes.MyTheme.colorScheme.onPrimary,
+                thickness: 2,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      "Categories",
+                      style: Utils.metaText(bold: true),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.add_box,
+                      color: MyThemes.MyTheme.colorScheme.onPrimary,
+                      size: 18,
+                    ),
+                  )
+                ],
+              ),
+              Column(
+                children: [
+                  ListTile(
+                    iconColor: MyThemes.MyTheme.colorScheme.onPrimary,
+                    leading: Icon(
+                      Icons.label_important,
+                    ),
+                    title: Text(
+                      "Tassk 1 ",
+                      style: Utils.normalText(),
+                    ),
+                  )
+                ],
+              ),
             ],
           )),
         ],

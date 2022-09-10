@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MyThemes {
   static ThemeData get MyTheme => ThemeData(
-
+        fontFamily: GoogleFonts.lato().fontFamily,
         colorScheme: const ColorScheme(
             brightness: Brightness.light,
             primary: const Color.fromARGB(255, 254, 76, 102),
