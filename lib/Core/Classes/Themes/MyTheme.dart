@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class MyThemes {
   static ThemeData get MyTheme => ThemeData(
+
         colorScheme: const ColorScheme(
             brightness: Brightness.light,
             primary: const Color.fromARGB(255, 254, 76, 102),
