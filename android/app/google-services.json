@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "593210258602",
+    "project_id": "keeptasks-fb94d",
+    "storage_bucket": "keeptasks-fb94d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:593210258602:android:f865937eaee424cd6dccd3",
+        "android_client_info": {
+          "package_name": "com.android.application"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "593210258602-7v380n5cm8id2p9dcs6tgpftu5fcg2h8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJgc5_cnJo7r10J5MSlEYmkTwpOOR5upo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "593210258602-7v380n5cm8id2p9dcs6tgpftu5fcg2h8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
