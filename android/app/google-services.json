@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:593210258602:android:f865937eaee424cd6dccd3",
+        "mobilesdk_app_id": "1:593210258602:android:34ba118b00ad9ad96dccd3",
         "android_client_info": {
-          "package_name": "com.android.application"
+          "package_name": "com.example.keep_tasks"
         }
       },
       "oauth_client": [

@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:keep_tasks/Core/Classes/Themes/Utils.dart';
+import 'package:keep_tasks/UI/Pages/auth_Pages/Login.dart';
 
 import '../../../Core/Classes/Themes/MyTheme.dart';
 
@@ -113,6 +116,15 @@ class _MyDrawerState extends State<MyDrawer> {
                         ),
                       ),
                       ListTile(
+                        onTap: (() async {
+                          await FirebaseAuth.instance.signOut().then((value) {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => LoginScreen(),
+                                ));
+                          });
+                        }),
                         dense: true,
                         iconColor: MyThemes.MyTheme.colorScheme.onPrimary,
                         // style: ListTileStyle.drawer,

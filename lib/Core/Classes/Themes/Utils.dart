@@ -34,6 +34,19 @@ class Utils {
     );
   }
 
+  static TextStyle logintext({
+    bool bold = false,
+    Color? color,
+    double? size,
+  }) {
+    return TextStyle(
+      fontFamily: GoogleFonts.roboto().fontFamily,
+      color: color ?? Colors.white,
+      fontSize: size ?? 14,
+      fontWeight: bold ? FontWeight.w900 : FontWeight.normal,
+    );
+  }
+
   static InputDecoration MytextField(
       {String? Label,
       IconData? iconData,
@@ -47,7 +60,7 @@ class Utils {
       contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 8),
       labelText: Label,
       hintText: hint,
-    
+
       filled: true,
       fillColor: color ?? MyThemes.MyTheme.colorScheme.onPrimary,
       // prefixIcon: Icon(iconData),
@@ -70,6 +83,20 @@ class Utils {
       //   borderSide: const BorderSide(color: Colors.red),
       //   borderRadius: BorderRadius.circular(10.0),
       // ),
+    );
+  }
+
+  static InputDecoration authField(
+      {String? label, IconData? icondata, VoidCallback? onpress}) {
+    return InputDecoration(
+      suffixIcon: icondata != null
+          ? IconButton(onPressed: onpress, icon: Icon(icondata))
+          : null,
+      isDense: true,
+      label: Text(label!),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
     );
   }
 }
