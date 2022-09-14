@@ -16,15 +16,8 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<AuthProvider>(
-          create: (context) => AuthProvider(),
-        ),
-        ChangeNotifierProvider<TasksProvider>(
-          create: (context) => TasksProvider(),
-        ),
-      ],
+    return ChangeNotifierProvider<TasksProvider>(
+      create: (context) => TasksProvider(),
       child: MaterialApp(
         theme: MyThemes.MyTheme,
         home: AuthManager().loginservice(),

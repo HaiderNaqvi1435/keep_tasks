@@ -95,7 +95,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => HomePage(),
+                            builder: (context) =>
+                                ChangeNotifierProvider<TasksProvider>(
+                                    create: (context) => TasksProvider(),
+                                    child: HomePage()),
                           ));
 
                       print("Login success");

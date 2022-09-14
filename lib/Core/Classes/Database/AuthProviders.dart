@@ -18,7 +18,8 @@ class AuthManager {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return HomePage();
+          return ChangeNotifierProvider<TasksProvider>(
+              create: (context) => TasksProvider(), child: HomePage());
         } else {
           return LoginScreen();
         }
@@ -34,8 +35,4 @@ class AuthManager {
       debugPrint(e.toString());
     }
   }
-
-  
-
- 
 }

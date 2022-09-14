@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:keep_tasks/Core/Classes/Database/TasksProvider.dart';
 import 'package:keep_tasks/Core/Classes/Themes/MyTheme.dart';
 import 'package:keep_tasks/Core/Classes/Themes/Utils.dart';
@@ -14,6 +15,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  var formatter = new DateFormat('d MMM, yyyy - hh:mm a');
+
   double borderradius = 10;
   @override
   Widget build(BuildContext context) {
@@ -90,17 +93,16 @@ class _HomePageState extends State<HomePage> {
                                 builder: (context) => AddTask(update: true),
                               ));
                         },
-                        leading: Checkbox(
-                          value: task.taskList[index].isDone,
-                          onChanged: (value) {
-                            setState(() {
+                        // leading: Checkbox(
+                        //   // value: task.taskList[index].isDone,
+                        //   onChanged: (value) {
+                        //     setState(() {
 
-                              
-                              task.taskList[index].isDone = value;
-                            });
-                            print(value);
-                          },
-                        ),
+                        //       task.taskList[index].isDone = value;
+                        //     });
+                        //     print(value);
+                        //   },
+                        // ),
                         //  Text("${index + 1}"),
                         title: Text(
                           task.taskList[index].title ?? "",
@@ -110,7 +112,7 @@ class _HomePageState extends State<HomePage> {
                               bold: true),
                         ),
                         subtitle: Text(
-                          task.taskList[index].sDate ?? "",
+                          "",
                           style:
                               Utils.normalText(color: Colors.black54, size: 14),
                         ),

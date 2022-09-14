@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:date_time_picker/date_time_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:intl/intl.dart';
 import 'package:keep_tasks/Core/Classes/Database/TasksProvider.dart';
 import 'package:keep_tasks/Core/Classes/Models/NoteModel.dart';
 import 'package:keep_tasks/Core/Classes/Themes/MyTheme.dart';
@@ -20,6 +20,9 @@ class AddTask extends StatefulWidget {
 }
 
 class _AddTaskState extends State<AddTask> {
+  Timestamp? dateTime;
+
+  var formatter = new DateFormat('d MMM, yyyy - hh:mm a');
   TextEditingController catcont = TextEditingController();
   TextEditingController titlecont = TextEditingController();
   TextEditingController discrpcont = TextEditingController();
@@ -27,9 +30,10 @@ class _AddTaskState extends State<AddTask> {
   TextEditingController eDatecont = TextEditingController();
   @override
   void initState() {
-    sDatecont = TextEditingController(text: DateTime.now().toString());
-    eDatecont = TextEditingController(text: DateTime.now().toString());
-    // TODO: implement initState
+    String datetimee = formatter.format(DateTime.now());
+    sDatecont = TextEditingController(text: datetimee);
+    print(datetimee);
+
     super.initState();
   }
 
@@ -48,6 +52,12 @@ class _AddTaskState extends State<AddTask> {
               },
               icon: Icon(Icons.done),
             ),
+            IconButton(
+              onPressed: () async {
+                print(sDatecont.text);
+              },
+              icon: Icon(Icons.abc_outlined),
+            ),
           ],
         ),
         body: Column(
@@ -59,9 +69,6 @@ class _AddTaskState extends State<AddTask> {
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
                       children: [
-                        // SizedBox(
-                        //   height: MediaQuery.of(context).size.height / 10,
-                        // ),
                         TypeAheadFormField(
                           hideOnEmpty: true,
                           textFieldConfiguration: TextFieldConfiguration(
@@ -92,6 +99,32 @@ class _AddTaskState extends State<AddTask> {
                           },
                         ),
                         SizedBox(height: 20),
+                        // timepicker
+                        // InputDatePickerFormField(
+                      
+                        //     initialDate: DateTime.now(),
+                        //     firstDate: DateTime(2000),
+                        //     lastDate: DateTime(2100)),
+                        // Container(
+                        //   height: 40,
+                        //   child: CupertinoDatePicker(
+                        //     mode: CupertinoDatePickerMode.dateAndTime,
+                        //     backgroundColor: Colors.transparent,
+                        //     onDateTimeChanged: (value) {
+                        //       setState(() {
+                        //         // dateTime = value;
+                        //       });
+                        //     },
+                        //   ),
+                        // ),
+
+                        // DatePickerDialog(
+
+                        //     initialDate: DateTime.now(),
+                        //     firstDate: DateTime(2000),
+                        //     lastDate: DateTime(2100)),
+
+                        SizedBox(height: 20),
                         TextFormField(
                           decoration: Utils.MytextField(
                             Label: "Title",
@@ -102,57 +135,6 @@ class _AddTaskState extends State<AddTask> {
                           controller: titlecont,
                         ),
                         SizedBox(height: 20),
-
-                        DateTimePicker(
-                          type: DateTimePickerType.dateTimeSeparate,
-                          // controller: sDatecont,
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime(2100),
-                          icon: Icon(Icons.event),
-                          dateMask: 'd MMM, yyyy',
-                          dateLabelText: 'Start Date',
-                          timeLabelText: "Start Time",
-                          controller: sDatecont,
-                          // onChanged: (val) {},
-                          // validator: (val) {
-                          //   if (val!.isEmpty) {
-                          //     sDatecont.text = DateTime.now().toString();
-                          //   } else {
-                          //     sDatecont.text = val;
-                          //   }
-                          //   print(val);
-                          // },
-                          // onSaved: (val) {
-                          //   print(val);
-                          // },
-                        ),
-                        SizedBox(height: 20),
-
-                        DateTimePicker(
-                          type: DateTimePickerType.dateTimeSeparate,
-                          controller: eDatecont,
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime(2100),
-                          icon: Icon(Icons.event),
-                          dateMask: 'd MMM, yyyy',
-                          dateLabelText: 'End Date',
-                          timeLabelText: "End Time",
-                          onChanged: (val) {},
-                          validator: (val) {
-                            // if (val!.isEmpty) {
-                            //   eDatecont.text = DateTime.now().toString();
-                            // } else {
-                            //   eDatecont.text = val;
-                            // }
-                          },
-                          onSaved: (val) {},
-                        ),
-                        // TextFormField(
-                        //   decoration: Utils.MytextField(Label: "Title"),
-                        // ),
-                        SizedBox(height: 20),
-
-                        // DatePickerDialog(initialDate: , firstDate:, lastDate: lastDate)
                         ConstrainedBox(
                           constraints: BoxConstraints(
                             minWidth: size.width,
@@ -184,16 +166,6 @@ class _AddTaskState extends State<AddTask> {
                             ),
                           ),
                         ),
-                        // SizedBox(height: 20),
-
-                        // TextFormField(
-                        //   decoration: Utils.MytextField(Label: "Title"),
-                        // ),
-                        // SizedBox(height: 20),
-
-                        // TextFormField(
-                        //   decoration: Utils.MytextField(Label: "Title"),
-                        // ),
                       ],
                     ),
                   ),
@@ -207,7 +179,6 @@ class _AddTaskState extends State<AddTask> {
             if (widget.update == true)
               Container(
                 height: 40,
-                // color: Colors.black,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -234,29 +205,39 @@ class _AddTaskState extends State<AddTask> {
     print("dialogue ");
     print(FirebaseAuth.instance.currentUser!.uid);
     try {
-      TaskModel taskModel = TaskModel(
+      if (widget.update == null || widget.update == false) {
+        TaskModel taskModel = TaskModel(
           editTime: Timestamp.now(),
           userID: FirebaseAuth.instance.currentUser!.uid,
           category: catcont.text,
           title: titlecont.text,
+          sDate: dateTime,
           discrp: discrpcont.text,
-          eDate: eDatecont.text,
-          sDate: sDatecont.text);
+        );
 
-      await FirebaseFirestore.instance
-          .collection("Tasks")
-          .add(taskModel.toMap())
-          .then((value) {
-        Navigator.popUntil(context, (route) => route.isFirst);
+        await FirebaseFirestore.instance
+            .collection("Tasks")
+            .add(taskModel.toMap())
+            .then((value) {
+          Navigator.popUntil(context, (route) => route.isFirst);
 
-        catcont.clear();
-        titlecont.clear();
-        discrpcont.clear();
-        sDatecont = TextEditingController(text: DateTime.now().toString());
-        eDatecont = TextEditingController(text: DateTime.now().toString());
-        print("Added successfully");
-      });
+          catcont.clear();
+          titlecont.clear();
+          discrpcont.clear();
+          sDatecont = TextEditingController(text: DateTime.now().toString());
+          eDatecont = TextEditingController(text: DateTime.now().toString());
+          print("Added successfully");
+        });
+      } else {
+        widget.taskModel!.category = catcont.text;
+        widget.taskModel!.title = titlecont.text;
+        // widget.taskModel!.sDate = sDatecont.text;
+        widget.taskModel!.discrp = discrpcont.text;
 
+        widget.taskModel!.reff!.set(widget.taskModel!.toMap()).then(
+              (value) => Navigator.popUntil(context, (route) => route.isFirst),
+            );
+      }
       print("try ended");
     } catch (e) {
       print(e);
@@ -264,15 +245,3 @@ class _AddTaskState extends State<AddTask> {
     }
   }
 }
-
-
-
-
-    // } else {
-    //               widget.taskModel!.category = catcont.text;
-    //               widget.taskModel!.title = titlecont.text;
-    //               widget.taskModel!.sDate = sDatecont.text;
-    //               widget.taskModel!.eDate = eDatecont.text;
-    //               widget.taskModel!.discrp = discrpcont.text;
-    //               Navigator.popUntil(context, (route) => route.isFirst);
-    //             }

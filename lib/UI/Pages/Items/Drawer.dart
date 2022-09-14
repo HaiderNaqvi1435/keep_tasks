@@ -34,7 +34,7 @@ class _MyDrawerState extends State<MyDrawer> {
   //   getuser();
   //   super.initState();
   // }
-
+  TextEditingController addCatcont = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Consumer<TasksProvider>(
@@ -83,7 +83,34 @@ class _MyDrawerState extends State<MyDrawer> {
                               ),
                             ),
                             IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    actionsPadding:
+                                        EdgeInsets.only(right: 20, bottom: 20),
+                                    elevation: 5,
+                                    title: Text(
+                                      "New Category",
+                                      style: Utils.normalText(
+                                          color: MyThemes
+                                              .MyTheme.colorScheme.primary),
+                                    ),
+                                    content: TextFormField(
+                                      controller: addCatcont,
+                                      decoration: Utils.authField(label: ""),
+                                    ),
+                                    actions: [
+                                      ElevatedButton(
+                                          onPressed: () async {
+                                            await addCategory();
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text("Add")),
+                                    ],
+                                  ),
+                                );
+                              },
                               icon: Icon(
                                 Icons.add_box,
                                 color: MyThemes.MyTheme.colorScheme.onPrimary,
@@ -168,5 +195,18 @@ class _MyDrawerState extends State<MyDrawer> {
             ),
           )),
     );
+  }
+
+  addCategory() async {
+    var data = {"category": addCatcont.text};
+
+    await FirebaseFirestore.instance
+        .collection("UserData")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("Categories")
+        .add(data)
+        .then((value) {
+      print("added");
+    });
   }
 }
