@@ -10,36 +10,9 @@ import 'package:provider/provider.dart';
 import '../../../UI/Pages/HomePage.dart';
 import '../../../UI/Pages/auth_Pages/Login.dart';
 
-class AuthProvider with ChangeNotifier {
-  addUser({String? password, UserData? userData, String? email}) async {
-    try {
-      await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email!, password: password!)
-          .then((value) async {
-        print("usercreat succssfully");
-        FirebaseFirestore.instance
-            .collection("UserData")
-            .doc(value.user!.uid)
-            .set(userData!.toMap());
-      }).then((value) {
-        FirebaseAuth.instance.signOut();
-      });
-    } catch (e) {
-      print("Something went wrong $e");
-    }
-  }
+class AuthProvider with ChangeNotifier {}
 
-  loginuser({String? password, String? email}) async {
-    try {
-      await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email!, password: password!);
-    } catch (e) {
-      print("Something went wrong! $e");
-    }
-  }
-}
-
-class Auth {
+class AuthManager {
   loginservice() {
     return StreamBuilder(
       stream: FirebaseAuth.instance.authStateChanges(),
@@ -71,4 +44,8 @@ class Auth {
       debugPrint(e.toString());
     }
   }
+
+  
+
+ 
 }
