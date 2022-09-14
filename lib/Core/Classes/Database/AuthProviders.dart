@@ -18,17 +18,7 @@ class AuthManager {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return MultiProvider(
-            providers: [
-              ChangeNotifierProvider<AuthProvider>(
-                create: (context) => AuthProvider(),
-              ),
-              ChangeNotifierProvider<TasksProvider>(
-                create: (context) => TasksProvider(),
-              ),
-            ],
-            child: HomePage(),
-          );
+          return HomePage();
         } else {
           return LoginScreen();
         }

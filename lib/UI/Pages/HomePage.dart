@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:keep_tasks/Core/Classes/Database/TasksProvider.dart';
 import 'package:keep_tasks/Core/Classes/Themes/MyTheme.dart';
 import 'package:keep_tasks/Core/Classes/Themes/Utils.dart';
 import 'package:keep_tasks/UI/Pages/AddTask.dart';
@@ -18,7 +19,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return Consumer(
+    return Consumer<TasksProvider>(
       builder: (context, task, child) => Scaffold(
         backgroundColor: MyThemes.MyTheme.colorScheme.background,
         appBar: AppBar(
@@ -44,6 +45,7 @@ class _HomePageState extends State<HomePage> {
                   color: MyThemes.MyTheme.colorScheme.onSecondary,
                 ),
                 decoration: InputDecoration(
+
                     // icon: Icon(Icons.search),
                     prefixIcon: Icon(Icons.search),
                     hintText: "Search",
@@ -56,28 +58,66 @@ class _HomePageState extends State<HomePage> {
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) => Padding(
-                    padding: const EdgeInsets.only(right: 5),
+                    padding: const EdgeInsets.only(right: 5, bottom: 8),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.circular(borderradius))),
                       onPressed: () {},
-                      child: Text("Task 1"),
+                      child: Text(task.catlist[index]),
                     ),
                   ),
-                  itemCount: 10,
+                  itemCount: task.catlist.length,
                 ),
               ),
-              SizedBox(height: 8),
               Expanded(
                 flex: 15,
                 child: ListView.builder(
                   itemBuilder: (context, index) => Padding(
                     padding: const EdgeInsets.only(bottom: 5),
-                    child: ListTile(),
+                    child: Card(
+                      //246,194,202
+                      color: Color.fromARGB(255, 254, 243, 245),
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      child: ListTile(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AddTask(update: true),
+                              ));
+                        },
+                        leading: Checkbox(
+                          value: task.taskList[index].isDone,
+                          onChanged: (value) {
+                            setState(() {
+
+                              
+                              task.taskList[index].isDone = value;
+                            });
+                            print(value);
+                          },
+                        ),
+                        //  Text("${index + 1}"),
+                        title: Text(
+                          task.taskList[index].title ?? "",
+                          style: Utils.normalText(
+                              size: 16,
+                              color: MyThemes.MyTheme.colorScheme.primary,
+                              bold: true),
+                        ),
+                        subtitle: Text(
+                          task.taskList[index].sDate ?? "",
+                          style:
+                              Utils.normalText(color: Colors.black54, size: 14),
+                        ),
+                      ),
+                    ),
                   ),
-                  itemCount: 10,
+                  itemCount: task.taskList.length,
                 ),
               ),
             ],
@@ -104,11 +144,7 @@ class _HomePageState extends State<HomePage> {
 }
 // InkWell(
 //                     onTap: () {
-//                       Navigator.push(
-//                           context,
-//                           MaterialPageRoute(
-//                             builder: (context) => AddTask(update: true),
-//                           ));
+//                  
 //                     },
 //                     child: Container(
 //                       decoration: BoxDecoration(
@@ -153,7 +189,7 @@ class _HomePageState extends State<HomePage> {
 //                                 ),
 //                               ],
 //                             ),
-//                             Text("20 aug 2022, 2:30pm"),
+//                             
 //                             Divider(
 //                               thickness: 1,
 //                             ),

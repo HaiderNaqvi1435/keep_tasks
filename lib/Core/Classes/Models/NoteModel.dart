@@ -3,10 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class TaskModel {
   String? title, userID, category, sDate, eDate, discrp;
   Timestamp? editTime;
-
+  bool? isDone = false;
+  DocumentReference? reff;
   TaskModel(
       {this.category,
       this.title,
+      this.reff,
       this.discrp,
       this.sDate,
       this.eDate,
@@ -22,6 +24,7 @@ class TaskModel {
       "sDate": sDate,
       "eDate": eDate,
       "discrp": discrp,
+      "isDone": isDone,
     };
   }
 
@@ -32,5 +35,6 @@ class TaskModel {
         editTime = map["editTime"],
         sDate = map["sDate"],
         eDate = map["eDate"],
+        isDone = map["isDone"],
         discrp = map["discrp"];
 }

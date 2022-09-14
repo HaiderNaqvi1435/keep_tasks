@@ -20,14 +20,6 @@ class AddTask extends StatefulWidget {
 }
 
 class _AddTaskState extends State<AddTask> {
-  List<String> catlist = [
-    "Task1",
-    "Task2",
-    "Task3",
-    "Task4",
-    "Task5",
-  ];
-
   TextEditingController catcont = TextEditingController();
   TextEditingController titlecont = TextEditingController();
   TextEditingController discrpcont = TextEditingController();
@@ -44,189 +36,191 @@ class _AddTaskState extends State<AddTask> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      backgroundColor: MyThemes.MyTheme.colorScheme.onPrimary,
-      appBar: AppBar(
-        title: Text(widget.update == true ? "Update Task" : "Add Task"),
-        actions: [
-          IconButton(
-            onPressed: () async {
-              await addData();
-            },
-            icon: Icon(Icons.done),
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Container(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      // SizedBox(
-                      //   height: MediaQuery.of(context).size.height / 10,
-                      // ),
-                      TypeAheadFormField(
-                        hideOnEmpty: true,
-                        textFieldConfiguration: TextFieldConfiguration(
-                            style: TextStyle(fontSize: 14),
-                            controller: catcont,
-                            decoration: Utils.MytextField(Label: "Category")),
-                        suggestionsCallback: (pattern) {
-                          return catlist.where((element) => element
-                              .toLowerCase()
-                              .contains(pattern.toLowerCase()));
-                        },
-                        itemBuilder: (context, suggestion) {
-                          return ListTile(
-                            title: Text(suggestion.toString()),
-                          );
-                        },
-                        transitionBuilder:
-                            (context, suggestionsBox, controller) {
-                          return suggestionsBox;
-                        },
-                        onSuggestionSelected: (suggestion) {
-                          catcont.text = suggestion.toString();
-                        },
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Select Category';
-                          }
-                        },
-                      ),
-                      SizedBox(height: 20),
-                      TextFormField(
-                        decoration: Utils.MytextField(
-                          Label: "Title",
+    return Consumer<TasksProvider>(
+      builder: (context, value, child) => Scaffold(
+        backgroundColor: MyThemes.MyTheme.colorScheme.onPrimary,
+        appBar: AppBar(
+          title: Text(widget.update == true ? "Update Task" : "Add Task"),
+          actions: [
+            IconButton(
+              onPressed: () async {
+                await addData();
+              },
+              icon: Icon(Icons.done),
+            ),
+          ],
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Container(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        // SizedBox(
+                        //   height: MediaQuery.of(context).size.height / 10,
+                        // ),
+                        TypeAheadFormField(
+                          hideOnEmpty: true,
+                          textFieldConfiguration: TextFieldConfiguration(
+                              style: TextStyle(fontSize: 14),
+                              controller: catcont,
+                              decoration: Utils.MytextField(Label: "Category")),
+                          suggestionsCallback: (pattern) {
+                            return value.catlist.where((element) => element
+                                .toLowerCase()
+                                .contains(pattern.toLowerCase()));
+                          },
+                          itemBuilder: (context, suggestion) {
+                            return ListTile(
+                              title: Text(suggestion.toString()),
+                            );
+                          },
+                          transitionBuilder:
+                              (context, suggestionsBox, controller) {
+                            return suggestionsBox;
+                          },
+                          onSuggestionSelected: (suggestion) {
+                            catcont.text = suggestion.toString();
+                          },
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Select Category';
+                            }
+                          },
                         ),
-                        onChanged: (value) {
-                          print(value);
-                        },
-                        controller: titlecont,
-                      ),
-                      SizedBox(height: 20),
-
-                      DateTimePicker(
-                        type: DateTimePickerType.dateTimeSeparate,
-                        // controller: sDatecont,
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime(2100),
-                        icon: Icon(Icons.event),
-                        dateMask: 'd MMM, yyyy',
-                        dateLabelText: 'Start Date',
-                        timeLabelText: "Start Time",
-                        controller: sDatecont,
-                        // onChanged: (val) {},
-                        // validator: (val) {
-                        //   if (val!.isEmpty) {
-                        //     sDatecont.text = DateTime.now().toString();
-                        //   } else {
-                        //     sDatecont.text = val;
-                        //   }
-                        //   print(val);
-                        // },
-                        // onSaved: (val) {
-                        //   print(val);
-                        // },
-                      ),
-                      SizedBox(height: 20),
-
-                      DateTimePicker(
-                        type: DateTimePickerType.dateTimeSeparate,
-                        controller: eDatecont,
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime(2100),
-                        icon: Icon(Icons.event),
-                        dateMask: 'd MMM, yyyy',
-                        dateLabelText: 'End Date',
-                        timeLabelText: "End Time",
-                        onChanged: (val) {},
-                        validator: (val) {
-                          // if (val!.isEmpty) {
-                          //   eDatecont.text = DateTime.now().toString();
-                          // } else {
-                          //   eDatecont.text = val;
-                          // }
-                        },
-                        onSaved: (val) {},
-                      ),
-                      // TextFormField(
-                      //   decoration: Utils.MytextField(Label: "Title"),
-                      // ),
-                      SizedBox(height: 20),
-
-                      // DatePickerDialog(initialDate: , firstDate:, lastDate: lastDate)
-                      ConstrainedBox(
-                        constraints: BoxConstraints(
-                          minWidth: size.width,
-                          maxWidth: size.width,
-                          minHeight: 25.0,
-                          maxHeight: MediaQuery.of(context).size.height / 2,
+                        SizedBox(height: 20),
+                        TextFormField(
+                          decoration: Utils.MytextField(
+                            Label: "Title",
+                          ),
+                          onChanged: (value) {
+                            print(value);
+                          },
+                          controller: titlecont,
                         ),
-                        child: Scrollbar(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 10.0),
-                            child: TextFormField(
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return " Answer should not be empty";
-                                } else {
-                                  null;
-                                }
-                              },
-                              keyboardType: TextInputType.multiline,
-                              maxLines: null,
-                              decoration: Utils.MytextField(
-                                Label: "Discrption",
+                        SizedBox(height: 20),
+
+                        DateTimePicker(
+                          type: DateTimePickerType.dateTimeSeparate,
+                          // controller: sDatecont,
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                          icon: Icon(Icons.event),
+                          dateMask: 'd MMM, yyyy',
+                          dateLabelText: 'Start Date',
+                          timeLabelText: "Start Time",
+                          controller: sDatecont,
+                          // onChanged: (val) {},
+                          // validator: (val) {
+                          //   if (val!.isEmpty) {
+                          //     sDatecont.text = DateTime.now().toString();
+                          //   } else {
+                          //     sDatecont.text = val;
+                          //   }
+                          //   print(val);
+                          // },
+                          // onSaved: (val) {
+                          //   print(val);
+                          // },
+                        ),
+                        SizedBox(height: 20),
+
+                        DateTimePicker(
+                          type: DateTimePickerType.dateTimeSeparate,
+                          controller: eDatecont,
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                          icon: Icon(Icons.event),
+                          dateMask: 'd MMM, yyyy',
+                          dateLabelText: 'End Date',
+                          timeLabelText: "End Time",
+                          onChanged: (val) {},
+                          validator: (val) {
+                            // if (val!.isEmpty) {
+                            //   eDatecont.text = DateTime.now().toString();
+                            // } else {
+                            //   eDatecont.text = val;
+                            // }
+                          },
+                          onSaved: (val) {},
+                        ),
+                        // TextFormField(
+                        //   decoration: Utils.MytextField(Label: "Title"),
+                        // ),
+                        SizedBox(height: 20),
+
+                        // DatePickerDialog(initialDate: , firstDate:, lastDate: lastDate)
+                        ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minWidth: size.width,
+                            maxWidth: size.width,
+                            minHeight: 25.0,
+                            maxHeight: MediaQuery.of(context).size.height / 2,
+                          ),
+                          child: Scrollbar(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 10.0),
+                              child: TextFormField(
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return " Answer should not be empty";
+                                  } else {
+                                    null;
+                                  }
+                                },
+                                keyboardType: TextInputType.multiline,
+                                maxLines: null,
+                                decoration: Utils.MytextField(
+                                  Label: "Discrption",
+                                ),
+                                onChanged: (value) {
+                                  print(value);
+                                },
+                                controller: discrpcont,
                               ),
-                              onChanged: (value) {
-                                print(value);
-                              },
-                              controller: discrpcont,
                             ),
                           ),
                         ),
-                      ),
-                      // SizedBox(height: 20),
+                        // SizedBox(height: 20),
 
-                      // TextFormField(
-                      //   decoration: Utils.MytextField(Label: "Title"),
-                      // ),
-                      // SizedBox(height: 20),
+                        // TextFormField(
+                        //   decoration: Utils.MytextField(Label: "Title"),
+                        // ),
+                        // SizedBox(height: 20),
 
-                      // TextFormField(
-                      //   decoration: Utils.MytextField(Label: "Title"),
-                      // ),
-                    ],
+                        // TextFormField(
+                        //   decoration: Utils.MytextField(Label: "Title"),
+                        // ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          Divider(
-            height: 0,
-            thickness: 2,
-          ),
-          if (widget.update == true)
-            Container(
-              height: 40,
-              // color: Colors.black,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: 25,
-                  ),
-                  Text("Edited on 9 aug 2022 at 2:30pm"),
-                  IconButton(onPressed: () {}, icon: Icon(Icons.delete)),
-                ],
-              ),
+            Divider(
+              height: 0,
+              thickness: 2,
             ),
-        ],
+            if (widget.update == true)
+              Container(
+                height: 40,
+                // color: Colors.black,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: 25,
+                    ),
+                    Text("Edited on 9 aug 2022 at 2:30pm"),
+                    IconButton(onPressed: () {}, icon: Icon(Icons.delete)),
+                  ],
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
