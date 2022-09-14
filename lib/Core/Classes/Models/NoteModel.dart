@@ -1,11 +1,22 @@
-class TaskModel {
-  String? category, sDate, eDate, discrp;
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-  TaskModel({this.category, this.discrp, this.sDate, this.eDate});
+class TaskModel {
+  String? userID, category, sDate, eDate, discrp;
+  Timestamp? editTime;
+
+  TaskModel(
+      {this.category,
+      this.discrp,
+      this.sDate,
+      this.eDate,
+      this.userID,
+      this.editTime});
 
   Map<String, dynamic> toMap() {
     return {
       "category": category,
+      "userID": userID,
+      "editTime": editTime,
       "sDate": sDate,
       "eDate": eDate,
       "discrp": discrp,
@@ -14,6 +25,8 @@ class TaskModel {
 
   TaskModel.fromMap(Map<String, dynamic> map)
       : category = map["category"],
+        userID = map["userID"],
+        editTime = map["editTime"],
         sDate = map["sDate"],
         eDate = map["eDate"],
         discrp = map["discrp"];

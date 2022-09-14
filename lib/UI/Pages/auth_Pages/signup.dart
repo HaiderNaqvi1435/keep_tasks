@@ -110,7 +110,7 @@ class _SignUpState extends State<SignUp> {
                         });
                       },
                       style: ElevatedButton.styleFrom(
-                          minimumSize: Size(250, 45),
+                          minimumSize: const Size(250, 45),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10))),
                       child: Text(

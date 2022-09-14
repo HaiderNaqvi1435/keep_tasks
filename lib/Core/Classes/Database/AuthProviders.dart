@@ -17,7 +17,7 @@ class AuthProvider with ChangeNotifier {
           .createUserWithEmailAndPassword(email: email!, password: password!)
           .then((value) async {
         print("usercreat succssfully");
-         FirebaseFirestore.instance
+        FirebaseFirestore.instance
             .collection("UserData")
             .doc(value.user!.uid)
             .set(userData!.toMap());
@@ -29,7 +29,14 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  
+  loginuser({String? password, String? email}) async {
+    try {
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email!, password: password!);
+    } catch (e) {
+      print("Something went wrong! $e");
+    }
+  }
 }
 
 class Auth {

@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:keep_tasks/Core/Classes/Database/TasksProvider.dart';
@@ -8,8 +10,8 @@ import 'package:keep_tasks/Core/Classes/Themes/Utils.dart';
 import 'package:provider/provider.dart';
 
 class AddTask extends StatefulWidget {
-  AddTask({Key? key}) : super(key: key);
-
+  AddTask({Key? key, this.update}) : super(key: key);
+  bool? update = false;
   @override
   State<AddTask> createState() => _AddTaskState();
 }
@@ -42,24 +44,36 @@ class _AddTaskState extends State<AddTask> {
       builder: (context, task, child) => Scaffold(
         backgroundColor: MyThemes.MyTheme.colorScheme.onPrimary,
         appBar: AppBar(
-          title: Text("Add Task"),
+          title: Text(widget.update == true ? "Update Task" : "Add Task"),
           actions: [
             IconButton(
-                onPressed: () {},
-                icon: IconButton(
-                  icon: Icon(Icons.done),
-                  onPressed: () {
-                    TaskModel taskModel = TaskModel(
-                        category: catcont.text,
-                        discrp: discrpcont.text,
-                        eDate: eDatecont.text,
-                        sDate: sDatecont.text);
+              onPressed: () async {
+                showDialog(
+                  context: context,
+                  builder: (context) =>
+                      Center(child: CircularProgressIndicator()),
+                );
+                TaskModel taskModel = TaskModel(
+                    editTime: Timestamp.now(),
+                    userID: FirebaseAuth.instance.currentUser!.uid,
+                    category: catcont.text,
+                    discrp: discrpcont.text,
+                    eDate: eDatecont.text,
+                    sDate: sDatecont.text);
 
-                    task.addTask(taskModel);
-                    print(sDatecont.text);
-                    print(eDatecont.text);
-                  },
-                ))
+                try {
+                  await task.addTask(taskModel);
+
+                  Navigator.popUntil(context, (route) => route.isFirst);
+                  print("Task added");
+                } catch (e) {
+                  Navigator.of(context).pop();
+                }
+                print(sDatecont.text);
+                print(eDatecont.text);
+              },
+              icon: Icon(Icons.done),
+            ),
           ],
         ),
         body: Column(
@@ -206,20 +220,21 @@ class _AddTaskState extends State<AddTask> {
               height: 0,
               thickness: 2,
             ),
-            Container(
-              height: 40,
-              // color: Colors.black,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: 25,
-                  ),
-                  Text("Edited on 9 aug 2022 at 2:30pm"),
-                  IconButton(onPressed: () {}, icon: Icon(Icons.delete)),
-                ],
+            if (widget.update == true)
+              Container(
+                height: 40,
+                // color: Colors.black,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: 25,
+                    ),
+                    Text("Edited on 9 aug 2022 at 2:30pm"),
+                    IconButton(onPressed: () {}, icon: Icon(Icons.delete)),
+                  ],
+                ),
               ),
-            ),
           ],
         ),
       ),

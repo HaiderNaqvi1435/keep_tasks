@@ -72,73 +72,83 @@ class _HomePageState extends State<HomePage> {
               child: ListView.builder(
                 itemBuilder: (context, index) => Padding(
                   padding: const EdgeInsets.only(bottom: 5),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(borderradius),
-                        border: Border.all(
-                          color: Colors.grey,
-                        )),
-                    height: MediaQuery.of(context).size.height / 4,
-                    // color: Colors.black,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddTask(update: true),
+                          ));
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(borderradius),
+                          border: Border.all(
+                            color: Colors.grey,
+                          )),
+                      height: MediaQuery.of(context).size.height / 4,
+                      // color: Colors.black,
 
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 4,
-                                child: Text(
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                  "Task Title  ",
-                                  style: Utils.normalText(
-                                    color: Colors.black,
-                                    bold: true,
-                                    size: 18,
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  flex: 4,
+                                  child: Text(
+                                    softWrap: true,
+                                    overflow: TextOverflow.ellipsis,
+                                    "Task Title  ",
+                                    style: Utils.normalText(
+                                      color: Colors.black,
+                                      bold: true,
+                                      size: 18,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  "Category",
-                                  style: Utils.normalText(
-                                    color: MyThemes.MyTheme.colorScheme.primary,
-                                    bold: true,
-                                    size: 14,
+                                Expanded(
+                                  child: Text(
+                                    "Category",
+                                    style: Utils.normalText(
+                                      color:
+                                          MyThemes.MyTheme.colorScheme.primary,
+                                      bold: true,
+                                      size: 14,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          Text("20 aug 2022, 2:30pm"),
-                          Divider(
-                            thickness: 1,
-                          ),
-                          // Flexible(
-                          //     child: ConstrainedBox(
-                          //   constraints: BoxConstraints(
-                          //     minWidth: size.width,
-                          //     maxWidth: size.width,
-                          //     minHeight: 25.0,
-                          //     maxHeight: 200.0,
-                          //   ),
-                          //   child:
-                          // )),
-                          Text(
-                            maxLines: 7,
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                            "Task Title Task TitleTask TitleTask TitleTask TitleT ask TitleTask Title Task TitleTask  TitleT ask Tit leTas k Title itleTask TitleTask TitleTask TitleT ask TitleTask Title Task TitleTask  TitleT ask Tit leTas k  itleTask TitleTask TitleTask TitleT ask TitleTask Title Task TitleTask  TitleT ask Tit leTas k  itleTask TitleTask TitleTask TitleT ask TitleTask Title Task TitleTask  TitleT ask Tit leTas k  itleTask TitleTask TitleTask TitleT ask TitleTask Title Task TitleTask  TitleT ask Tit leTas k  itleTask TitleTask TitleTask TitleT ask TitleTask Title Task TitleTask  TitleT ask Tit leTas k  itleTask TitleTask TitleTask TitleT ask TitleTask Title Task TitleTask  TitleT ask Tit leTas k  itleTask TitleTask TitleTask TitleT ask TitleTask Title Task TitleTask  TitleT ask Tit leTas k  itleTask TitleTask TitleTask TitleT ask TitleTask Title Task TitleTask  TitleT ask Tit leTas k  itleTask TitleTask TitleTask TitleT ask TitleTask Title Task TitleTask  TitleT ask Tit leTas k  itleTask TitleTask TitleTask TitleT ask TitleTask Title Task TitleTask  TitleT ask Tit leTas k   ",
-                            style: Utils.normalText(
-                              color: Colors.black,
-                              size: 14,
+                              ],
                             ),
-                          ),
-                        ],
+                            Text("20 aug 2022, 2:30pm"),
+                            Divider(
+                              thickness: 1,
+                            ),
+                            // Flexible(
+                            //     child: ConstrainedBox(
+                            //   constraints: BoxConstraints(
+                            //     minWidth: size.width,
+                            //     maxWidth: size.width,
+                            //     minHeight: 25.0,
+                            //     maxHeight: 200.0,
+                            //   ),
+                            //   child:
+                            // )),
+                            Text(
+                              maxLines: 7,
+                              softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                              "Task Title Task TitleTask TitleTask TitleTask TitleT ask TitleTask Title Task TitleTask  TitleT ask Tit leTas k Title itleTask TitleTask TitleTask TitleT ask TitleTask Title Task TitleTask  TitleT ask Tit leTas k  itleTask TitleTask TitleTask TitleT ask TitleTask Title Task TitleTask  TitleT ask Tit leTas k  itleTask TitleTask TitleTask TitleT ask TitleTask Title Task TitleTask  TitleT ask Tit leTas k  itleTask TitleTask TitleTask TitleT ask TitleTask Title Task TitleTask  TitleT ask Tit leTas k  itleTask TitleTask TitleTask TitleT ask TitleTask Title Task TitleTask  TitleT ask Tit leTas k  itleTask TitleTask TitleTask TitleT ask TitleTask Title Task TitleTask  TitleT ask Tit leTas k  itleTask TitleTask TitleTask TitleT ask TitleTask Title Task TitleTask  TitleT ask Tit leTas k  itleTask TitleTask TitleTask TitleT ask TitleTask Title Task TitleTask  TitleT ask Tit leTas k  itleTask TitleTask TitleTask TitleT ask TitleTask Title Task TitleTask  TitleT ask Tit leTas k  itleTask TitleTask TitleTask TitleT ask TitleTask Title Task TitleTask  TitleT ask Tit leTas k   ",
+                              style: Utils.normalText(
+                                color: Colors.black,
+                                size: 14,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
