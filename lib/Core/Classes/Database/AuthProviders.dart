@@ -10,7 +10,6 @@ import 'package:provider/provider.dart';
 import '../../../UI/Pages/HomePage.dart';
 import '../../../UI/Pages/auth_Pages/Login.dart';
 
-class AuthProvider with ChangeNotifier {}
 
 class AuthManager {
   loginservice() {
@@ -18,8 +17,7 @@ class AuthManager {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return ChangeNotifierProvider<TasksProvider>(
-              create: (context) => TasksProvider(), child: HomePage());
+          return HomePage();
         } else {
           return LoginScreen();
         }

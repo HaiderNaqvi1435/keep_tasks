@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:keep_tasks/Core/Classes/Models/UserModel.dart';
 
 import '../Models/NoteModel.dart';
 
@@ -8,7 +10,23 @@ class TasksProvider with ChangeNotifier {
   TasksProvider() {
     getTasks();
     getCategories();
+    getUser();
   }
+  UserData userData = UserData();
+
+  getUser() async {
+    FirebaseFirestore.instance
+        .collection("UserData")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then((value) {
+      userData = UserData.fromMap(value.data()!);
+      notifyListeners();
+    });
+  }
+
+  List<TaskModel> sortedList = [];
+
   List<String> catlist = [];
   getCategories() async {
     await FirebaseFirestore.instance
@@ -20,14 +38,42 @@ class TasksProvider with ChangeNotifier {
       catlist = List.generate(value.size, (index) {
         return value.docs[index].data()["category"];
       });
-      print("added");
+      notifyListeners();
+      print(catlist);
     });
+  }
+
+  addCategory({String? category}) async {
+    bool isAvail = catlist.contains(category);
+
+    if (isAvail == true) {
+      print("Alreay in Category");
+    } else {
+      print("adding category");
+      var data = {"category": category};
+
+      await FirebaseFirestore.instance
+          .collection("UserData")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection("Categories")
+          .add(data)
+          .then((value) {
+        getCategories();
+        notifyListeners();
+        print("added");
+      });
+    }
   }
 
   List<TaskModel> taskList = [];
 
   getTasks() async {
-    await FirebaseFirestore.instance.collection("Tasks").get().then((value) {
+    print("Getting tasks");
+    await FirebaseFirestore.instance
+        .collection("Tasks")
+        .where("userID", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then((value) {
       print(value.size);
 
       taskList = List.generate(value.size, (index) {
@@ -35,6 +81,10 @@ class TasksProvider with ChangeNotifier {
         taskModel.reff = value.docs[index].reference;
         return taskModel;
       });
+      sortedList.clear();
+      sortedList = List.from(taskList);
+      print("Got tasks");
+
       notifyListeners();
     });
   }

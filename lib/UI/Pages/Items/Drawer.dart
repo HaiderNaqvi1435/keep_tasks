@@ -34,11 +34,12 @@ class _MyDrawerState extends State<MyDrawer> {
   //   getuser();
   //   super.initState();
   // }
+  bool selected = false;
   TextEditingController addCatcont = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Consumer<TasksProvider>(
-      builder: (context, value, child) => Drawer(
+      builder: (context, task, child) => Drawer(
           backgroundColor: MyThemes.MyTheme.colorScheme.primary,
           child: SafeArea(
             child: Padding(
@@ -63,7 +64,7 @@ class _MyDrawerState extends State<MyDrawer> {
                                 style: Utils.normalText(bold: true),
                               ),
                               accountName: Text(
-                                "name",
+                                task.userData.name!,
                                 style: Utils.normalText(bold: true),
                               )),
                         ),
@@ -103,8 +104,11 @@ class _MyDrawerState extends State<MyDrawer> {
                                     actions: [
                                       ElevatedButton(
                                           onPressed: () async {
-                                            await addCategory();
+                                            await task.addCategory(
+                                                category: addCatcont.text);
                                             Navigator.of(context).pop();
+
+                                            await task.getCategories();
                                           },
                                           child: Text("Add")),
                                     ],
@@ -124,21 +128,30 @@ class _MyDrawerState extends State<MyDrawer> {
                   ),
                   Expanded(
                     child: ListView.builder(
-                      itemCount: value.catlist.length,
+                      itemCount: task.catlist.length,
                       itemBuilder: (context, index) => ListTile(
+                        onTap: () {
+                          setState(() {
+                            // selected = true;
+                            task.sortedList = task.taskList
+                                .where((element) =>
+                                    element.category == task.catlist[index])
+                                .toList();
+                          });
+                        },
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
                                 bottomRight: Radius.circular(50),
                                 topRight: Radius.circular(50))),
                         dense: true,
                         selectedTileColor: Color.fromARGB(255, 246, 194, 202),
-                        selected: false,
+                        selected: selected,
                         iconColor: MyThemes.MyTheme.colorScheme.onPrimary,
                         leading: Icon(
                           Icons.label_important,
                         ),
                         title: Text(
-                          value.catlist[index],
+                          task.catlist[index],
                           style: Utils.normalText(),
                         ),
                       ),
@@ -196,17 +209,6 @@ class _MyDrawerState extends State<MyDrawer> {
           )),
     );
   }
+//
 
-  addCategory() async {
-    var data = {"category": addCatcont.text};
-
-    await FirebaseFirestore.instance
-        .collection("UserData")
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection("Categories")
-        .add(data)
-        .then((value) {
-      print("added");
-    });
-  }
 }

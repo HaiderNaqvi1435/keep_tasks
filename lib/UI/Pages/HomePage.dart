@@ -15,6 +15,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  TextEditingController searchcont = TextEditingController();
   var formatter = new DateFormat('d MMM, yyyy - hh:mm a');
 
   double borderradius = 10;
@@ -44,6 +45,7 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             children: [
               TextFormField(
+                controller: searchcont,
                 style: Utils.normalText(
                   color: MyThemes.MyTheme.colorScheme.onSecondary,
                 ),
@@ -55,71 +57,97 @@ class _HomePageState extends State<HomePage> {
                     isDense: true,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(borderradius))),
+                onChanged: ((value) {
+                  setState(() {
+                    task.sortedList = task.taskList
+                        .where((element) => element.title!.contains(value))
+                        .toList();
+                  });
+                }),
               ),
               SizedBox(height: 8),
-              Expanded(
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) => Padding(
-                    padding: const EdgeInsets.only(right: 5, bottom: 8),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(borderradius))),
-                      onPressed: () {},
-                      child: Text(task.catlist[index]),
-                    ),
-                  ),
-                  itemCount: task.catlist.length,
-                ),
-              ),
-              Expanded(
-                flex: 15,
-                child: ListView.builder(
-                  itemBuilder: (context, index) => Padding(
-                    padding: const EdgeInsets.only(bottom: 5),
-                    child: Card(
-                      //246,194,202
-                      color: Color.fromARGB(255, 254, 243, 245),
-                      elevation: 5,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      child: ListTile(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AddTask(update: true),
-                              ));
-                        },
-                        // leading: Checkbox(
-                        //   // value: task.taskList[index].isDone,
-                        //   onChanged: (value) {
-                        //     setState(() {
+              if (task.catlist.isNotEmpty)
+                Expanded(
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) => Padding(
+                      padding: const EdgeInsets.only(right: 5, bottom: 8),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.circular(borderradius))),
+                        onPressed: () {
+                          // task.sortedList=
 
-                        //       task.taskList[index].isDone = value;
-                        //     });
-                        //     print(value);
-                        //   },
-                        // ),
-                        //  Text("${index + 1}"),
-                        title: Text(
-                          task.taskList[index].title ?? "",
-                          style: Utils.normalText(
-                              size: 16,
-                              color: MyThemes.MyTheme.colorScheme.primary,
-                              bold: true),
-                        ),
-                        subtitle: Text(
-                          "",
-                          style:
-                              Utils.normalText(color: Colors.black54, size: 14),
-                        ),
+                          setState(() {
+                            task.sortedList = task.taskList
+                                .where((element) =>
+                                    element.category == task.catlist[index])
+                                .toList();
+                          });
+                        },
+                        child: Text(task.catlist[index]),
                       ),
                     ),
+                    itemCount: task.catlist.length,
                   ),
-                  itemCount: task.taskList.length,
+                ),
+              Expanded(
+                flex: 15,
+                child: RefreshIndicator(
+                  onRefresh: (() async {
+                    await task.getCategories();
+                    await task.getTasks();
+                  }),
+                  child: ListView.builder(
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 5),
+                        child: Card(
+                          //246,194,202
+                          color: Color.fromARGB(255, 254, 243, 245),
+                          elevation: 5,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          child: ListTile(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AddTask(
+                                        taskModel: task.sortedList[index]),
+                                  ));
+                            },
+                            // leading: Checkbox(
+                            //   // value: task.taskList[index].isDone,
+                            //   onChanged: (value) {
+                            //     setState(() {
+
+                            //       task.taskList[index].isDone = value;
+                            //     });
+                            //     print(value);
+                            //   },
+                            // ),
+                            //  Text("${index + 1}"),
+                            title: Text(
+                              task.sortedList[index].title ?? "",
+                              style: Utils.normalText(
+                                  size: 16,
+                                  color: MyThemes.MyTheme.colorScheme.primary,
+                                  bold: true),
+                            ),
+                            subtitle: Text(
+                              task.taskList[index].dueDate ?? "",
+                              style: Utils.normalText(
+                                  color: Colors.black54, size: 14),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                    itemCount: task.sortedList.length,
+                  ),
                 ),
               ),
             ],
@@ -146,7 +174,7 @@ class _HomePageState extends State<HomePage> {
 }
 // InkWell(
 //                     onTap: () {
-//                  
+//
 //                     },
 //                     child: Container(
 //                       decoration: BoxDecoration(
@@ -191,7 +219,7 @@ class _HomePageState extends State<HomePage> {
 //                                 ),
 //                               ],
 //                             ),
-//                             
+//
 //                             Divider(
 //                               thickness: 1,
 //                             ),

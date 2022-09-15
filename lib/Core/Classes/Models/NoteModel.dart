@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TaskModel {
-  String? title, userID, category, discrp;
+  String? title, userID, category, discrp, dueDate;
   Timestamp? editTime;
-  Timestamp? sDate;
+
   bool? isDone = false;
   DocumentReference? reff;
   TaskModel(
@@ -11,7 +11,7 @@ class TaskModel {
       this.title,
       this.reff,
       this.discrp,
-      this.sDate,
+      this.dueDate,
       this.userID,
       this.editTime});
 
@@ -21,7 +21,7 @@ class TaskModel {
       "title": title,
       "userID": userID,
       "editTime": editTime,
-      "sDate": sDate,
+      "dueDate": dueDate,
       "discrp": discrp,
       "isDone": isDone,
     };
@@ -32,7 +32,7 @@ class TaskModel {
         title = map["title"],
         userID = map["userID"],
         editTime = map["editTime"],
-        sDate = map["sDate"],
+        dueDate = map["dueDate"],
         isDone = map["isDone"],
         discrp = map["discrp"];
 }
