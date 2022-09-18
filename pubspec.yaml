@@ -36,6 +36,7 @@ dependencies:
   firebase_core: ^1.22.0
   flutter:
     sdk: flutter
+  flutter_quill: ^6.0.5
   flutter_typeahead: ^4.1.0
   google_fonts: ^3.0.1
   intl: ^0.17.0

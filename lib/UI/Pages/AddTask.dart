@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
 import 'package:keep_tasks/Core/Classes/Database/TasksProvider.dart';
@@ -20,14 +20,14 @@ class AddTask extends StatefulWidget {
 
 class _AddTaskState extends State<AddTask> {
   // String? editTime;
-
+  QuillController quillcont = QuillController.basic();
   var formatter = new DateFormat('d MMM, yyyy - hh:mm a');
   TextEditingController catcont = TextEditingController();
   TextEditingController titlecont = TextEditingController();
   TextEditingController discrpcont = TextEditingController();
   TextEditingController dueDatecont = TextEditingController();
   final GlobalKey<FormState> formkey = GlobalKey<FormState>();
-
+  bool toolbar = false;
   @override
   void initState() {
     if (widget.taskModel != null) {
@@ -66,6 +66,12 @@ class _AddTaskState extends State<AddTask> {
               },
               icon: Icon(Icons.done),
             ),
+            IconButton(
+                onPressed: () {
+                  print(quillcont.document.toPlainText());
+                  print(quillcont.document.toPlainText());
+                },
+                icon: Icon(Icons.refresh))
           ],
         ),
         body: Column(
@@ -158,38 +164,53 @@ class _AddTaskState extends State<AddTask> {
                             controller: titlecont,
                           ),
                           SizedBox(height: 20),
-                          ConstrainedBox(
-                            constraints: BoxConstraints(
-                              minWidth: size.width,
-                              maxWidth: size.width,
-                              minHeight: 25.0,
-                              maxHeight: MediaQuery.of(context).size.height / 2,
-                            ),
-                            child: Scrollbar(
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 10.0),
-                                child: TextFormField(
-                                  // validator: (value) {
-                                  //   if (value!.isEmpty) {
-                                  //     return " Answer should not be empty";
-                                  //   } else {
-                                  //     null;
-                                  //   }
-                                  // },
-                                  keyboardType: TextInputType.multiline,
-                                  maxLines: null,
-                                  decoration: InputDecoration(
-                                    hintText: "Discrption",
-                                    border: InputBorder.none,
-                                  ),
-                                  onChanged: (value) {
-                                    print(value);
-                                  },
-                                  controller: discrpcont,
+                          // ConstrainedBox(
+                          //   constraints: BoxConstraints(
+                          //     minWidth: size.width,
+                          //     maxWidth: size.width,
+                          //     minHeight: 25.0,
+                          //     maxHeight: MediaQuery.of(context).size.height / 2,
+                          //   ),
+                          //   child: Scrollbar(
+                          //     child: Padding(
+                          //       padding: const EdgeInsets.only(left: 10.0),
+                          //       child: TextFormField(
+                          //         // validator: (value) {
+                          //         //   if (value!.isEmpty) {
+                          //         //     return " Answer should not be empty";
+                          //         //   } else {
+                          //         //     null;
+                          //         //   }
+                          //         // },
+                          //         keyboardType: TextInputType.multiline,
+                          //         maxLines: null,
+                          //         decoration: InputDecoration(
+                          //           hintText: "Discrption",
+                          //           border: InputBorder.none,
+                          //         ),
+                          //         onChanged: (value) {
+                          //           print(value);
+                          //         },
+                          //         controller: discrpcont,
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [
+                                QuillToolbar.basic(
+                                  controller: quillcont,
                                 ),
-                              ),
+                              ],
                             ),
                           ),
+                          QuillEditor.basic(
+                            controller: quillcont,
+                            readOnly: false,
+                          ),
+                          SizedBox(height: 20),
                         ],
                       ),
                     ),

@@ -15,6 +15,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  
   TextEditingController searchcont = TextEditingController();
   var formatter = new DateFormat('d MMM, yyyy - hh:mm a');
 
