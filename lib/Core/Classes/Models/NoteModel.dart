@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TaskModel {
-  String? title, userID, category, discrp, dueDate;
+  String? title, userID, category, dueDate;
+  var discrp;
   Timestamp? editTime;
 
   bool? isDone = false;

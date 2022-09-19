@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:keep_tasks/Core/Classes/Models/UserModel.dart';
@@ -12,8 +14,8 @@ class TasksProvider with ChangeNotifier {
     getCategories();
     getUser();
   }
+  TaskModel taskModel = TaskModel();
   UserData userData = UserData();
-
   getUser() async {
     FirebaseFirestore.instance
         .collection("UserData")
@@ -29,6 +31,7 @@ class TasksProvider with ChangeNotifier {
 
   List<String> catlist = [];
   getCategories() async {
+    // FirebaseDatabase.instance.ref("UserData").keepSynced(true);
     await FirebaseFirestore.instance
         .collection("UserData")
         .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -38,6 +41,7 @@ class TasksProvider with ChangeNotifier {
       catlist = List.generate(value.size, (index) {
         return value.docs[index].data()["category"];
       });
+
       notifyListeners();
       print(catlist);
     });
@@ -51,6 +55,7 @@ class TasksProvider with ChangeNotifier {
     } else {
       print("adding category");
       var data = {"category": category};
+      // FirebaseDatabase.instance.setPersistenceEnabled(true);
 
       await FirebaseFirestore.instance
           .collection("UserData")
@@ -68,19 +73,27 @@ class TasksProvider with ChangeNotifier {
   List<TaskModel> taskList = [];
 
   getTasks() async {
+    // var data;
     print("Getting tasks");
+    // await FirebaseDatabase.instance.ref("Tasks").keepSynced(true);
+
     await FirebaseFirestore.instance
         .collection("Tasks")
         .where("userID", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .get()
-        .then((value) {
+        .then((value) async {
       print(value.size);
-
       taskList = List.generate(value.size, (index) {
+        // DatabaseReference reff = FirebaseDatabase.instance.ref("AddTasks");
+        // reff.onValue.listen((event) {
+        //   data = event.snapshot.value;
+        // });
+
         TaskModel taskModel = TaskModel.fromMap(value.docs[index].data());
         taskModel.reff = value.docs[index].reference;
         return taskModel;
       });
+      // print(data);
       sortedList.clear();
       sortedList = List.from(taskList);
       print("Got tasks");

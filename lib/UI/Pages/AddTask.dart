@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,6 +21,7 @@ class AddTask extends StatefulWidget {
 }
 
 class _AddTaskState extends State<AddTask> {
+  ScrollController scrollController = ScrollController();
   // String? editTime;
   QuillController quillcont = QuillController.basic();
   var formatter = new DateFormat('d MMM, yyyy - hh:mm a');
@@ -30,11 +33,23 @@ class _AddTaskState extends State<AddTask> {
   bool toolbar = false;
   @override
   void initState() {
+// var myjson = "[
+//       {"insert": "Description \n"}
+//     ];
     if (widget.taskModel != null) {
       catcont.text = widget.taskModel!.category!;
       titlecont.text = widget.taskModel!.title!;
       dueDatecont.text = widget.taskModel!.dueDate!;
-      discrpcont.text = widget.taskModel!.discrp!;
+
+      quillcont = QuillController(
+          document: Document.fromJson(jsonDecode(widget.taskModel!.discrp)),
+          selection: TextSelection.collapsed(offset: 0));
+
+      // quillcont = QuillController(
+      //     document: Document(),
+      //     selection: TextSelection.collapsed(offset: 0));
+
+      // quillcont.document. = widget.taskModel!.discrp!.;
     }
 
     super.initState();
@@ -68,8 +83,8 @@ class _AddTaskState extends State<AddTask> {
             ),
             IconButton(
                 onPressed: () {
-                  print(quillcont.document.toPlainText());
-                  print(quillcont.document.toPlainText());
+                  // print(quillcont.document.toPlainText());
+                  // print(quillcont.document.toPlainText());
                 },
                 icon: Icon(Icons.refresh))
           ],
@@ -85,117 +100,136 @@ class _AddTaskState extends State<AddTask> {
                       key: formkey,
                       child: Column(
                         children: [
-                          TypeAheadFormField(
-                            hideOnEmpty: true,
-                            textFieldConfiguration: TextFieldConfiguration(
-                                style: TextStyle(fontSize: 14),
-                                controller: catcont,
+                          Column(
+                            children: [
+                              TypeAheadFormField(
+                                hideOnEmpty: true,
+                                textFieldConfiguration: TextFieldConfiguration(
+                                    style: TextStyle(fontSize: 14),
+                                    controller: catcont,
+                                    decoration:
+                                        Utils.MytextField(Label: "Category")),
+                                suggestionsCallback: (pattern) {
+                                  return task.catlist.where((element) => element
+                                      .toLowerCase()
+                                      .contains(pattern.toLowerCase()));
+                                },
+                                itemBuilder: (context, suggestion) {
+                                  return ListTile(
+                                    title: Text(suggestion.toString()),
+                                  );
+                                },
+                                transitionBuilder:
+                                    (context, suggestionsBox, controller) {
+                                  return suggestionsBox;
+                                },
+                                onSuggestionSelected: (suggestion) {
+                                  catcont.text = suggestion.toString();
+                                },
+                                validator: (value) {
+                                  if (value!.isEmpty || value == null) {
+                                    return 'Select Category';
+                                  } else
+                                    return null;
+                                },
+                              ),
+                              SizedBox(height: 20),
+                              DateTimeField(
                                 decoration:
-                                    Utils.MytextField(Label: "Category")),
-                            suggestionsCallback: (pattern) {
-                              return task.catlist.where((element) => element
-                                  .toLowerCase()
-                                  .contains(pattern.toLowerCase()));
-                            },
-                            itemBuilder: (context, suggestion) {
-                              return ListTile(
-                                title: Text(suggestion.toString()),
-                              );
-                            },
-                            transitionBuilder:
-                                (context, suggestionsBox, controller) {
-                              return suggestionsBox;
-                            },
-                            onSuggestionSelected: (suggestion) {
-                              catcont.text = suggestion.toString();
-                            },
-                            validator: (value) {
-                              if (value!.isEmpty || value == null) {
-                                return 'Select Category';
-                              } else
-                                return null;
-                            },
-                          ),
-                          SizedBox(height: 20),
-                          DateTimeField(
-                            decoration: Utils.MytextField(Label: "Due Date"),
-                            controller: dueDatecont,
-                            format: formatter,
-                            onShowPicker: (context, currentValue) async {
-                              final date = await showDatePicker(
-                                  context: context,
-                                  firstDate: DateTime(1900),
-                                  initialDate: currentValue ?? DateTime.now(),
-                                  lastDate: DateTime(2100));
-                              if (date != null) {
-                                final time = await showTimePicker(
-                                  context: context,
-                                  initialTime: TimeOfDay.fromDateTime(
-                                      currentValue ?? DateTime.now()),
-                                );
+                                    Utils.MytextField(Label: "Due Date"),
+                                controller: dueDatecont,
+                                format: formatter,
+                                onShowPicker: (context, currentValue) async {
+                                  final date = await showDatePicker(
+                                      context: context,
+                                      firstDate: DateTime(1900),
+                                      initialDate:
+                                          currentValue ?? DateTime.now(),
+                                      lastDate: DateTime(2100));
+                                  if (date != null) {
+                                    final time = await showTimePicker(
+                                      context: context,
+                                      initialTime: TimeOfDay.fromDateTime(
+                                          currentValue ?? DateTime.now()),
+                                    );
 
-                                return DateTimeField.combine(date, time);
-                              } else {
-                                print(currentValue);
-                                return currentValue;
-                              }
-                            },
-                            validator: (value) {
-                              if (dueDatecont.text.isEmpty) {
-                                return "Select Time";
-                              } else
-                                return null;
-                            },
+                                    return DateTimeField.combine(date, time);
+                                  } else {
+                                    print(currentValue);
+                                    return currentValue;
+                                  }
+                                },
+                                validator: (value) {
+                                  if (dueDatecont.text.isEmpty) {
+                                    return "Select Time";
+                                  } else
+                                    return null;
+                                },
+                              ),
+                              SizedBox(height: 20),
+                              TextFormField(
+                                validator: (value) {
+                                  if (value!.isEmpty || value == null) {
+                                    return "Enter Title";
+                                  } else
+                                    return null;
+                                },
+                                decoration: Utils.MytextField(
+                                  Label: "Title",
+                                ),
+                                onChanged: (value) {
+                                  print(value);
+                                },
+                                controller: titlecont,
+                              ),
+                              SizedBox(height: 20),
+                              // ConstrainedBox(
+                              //   constraints: BoxConstraints(
+                              //     minWidth: size.width,
+                              //     maxWidth: size.width,
+                              //     minHeight: 25.0,
+                              //     maxHeight: MediaQuery.of(context).size.height / 2,
+                              //   ),
+                              //   child: Scrollbar(
+                              //     child: Padding(
+                              //       padding: const EdgeInsets.only(left: 10.0),
+                              //       child: TextFormField(
+                              //         // validator: (value) {
+                              //         //   if (value!.isEmpty) {
+                              //         //     return " Answer should not be empty";
+                              //         //   } else {
+                              //         //     null;
+                              //         //   }
+                              //         // },
+                              //         keyboardType: TextInputType.multiline,
+                              //         maxLines: null,
+                              //         decoration: InputDecoration(
+                              //           hintText: "Discrption",
+                              //           border: InputBorder.none,
+                              //         ),
+                              //         onChanged: (value) {
+                              //           print(value);
+                              //         },
+                              //         controller: discrpcont,
+                              //       ),
+                              //     ),
+                              //   ),
+                              // ),
+
+                              QuillEditor(
+                                showCursor: true,
+                                scrollable: false,
+                                expands: false,
+                                padding: EdgeInsets.all(8),
+                                scrollController: scrollController,
+                                autoFocus: true,
+                                focusNode: FocusNode(),
+                                controller: quillcont,
+                                readOnly: false,
+                              ),
+                              SizedBox(height: 20),
+                            ],
                           ),
-                          SizedBox(height: 20),
-                          TextFormField(
-                            validator: (value) {
-                              if (value!.isEmpty || value == null) {
-                                return "Enter Title";
-                              } else
-                                return null;
-                            },
-                            decoration: Utils.MytextField(
-                              Label: "Title",
-                            ),
-                            onChanged: (value) {
-                              print(value);
-                            },
-                            controller: titlecont,
-                          ),
-                          SizedBox(height: 20),
-                          // ConstrainedBox(
-                          //   constraints: BoxConstraints(
-                          //     minWidth: size.width,
-                          //     maxWidth: size.width,
-                          //     minHeight: 25.0,
-                          //     maxHeight: MediaQuery.of(context).size.height / 2,
-                          //   ),
-                          //   child: Scrollbar(
-                          //     child: Padding(
-                          //       padding: const EdgeInsets.only(left: 10.0),
-                          //       child: TextFormField(
-                          //         // validator: (value) {
-                          //         //   if (value!.isEmpty) {
-                          //         //     return " Answer should not be empty";
-                          //         //   } else {
-                          //         //     null;
-                          //         //   }
-                          //         // },
-                          //         keyboardType: TextInputType.multiline,
-                          //         maxLines: null,
-                          //         decoration: InputDecoration(
-                          //           hintText: "Discrption",
-                          //           border: InputBorder.none,
-                          //         ),
-                          //         onChanged: (value) {
-                          //           print(value);
-                          //         },
-                          //         controller: discrpcont,
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
                           SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Row(
@@ -206,11 +240,6 @@ class _AddTaskState extends State<AddTask> {
                               ],
                             ),
                           ),
-                          QuillEditor.basic(
-                            controller: quillcont,
-                            readOnly: false,
-                          ),
-                          SizedBox(height: 20),
                         ],
                       ),
                     ),
@@ -266,15 +295,16 @@ class _AddTaskState extends State<AddTask> {
           category: catcont.text,
           title: titlecont.text,
           dueDate: dueDatecont.text,
-          discrp: discrpcont.text,
+          discrp: jsonEncode(quillcont.document.toDelta().toJson()),
         );
 
         await FirebaseFirestore.instance
             .collection("Tasks")
             .add(taskModel.toMap())
-            .then((value) {
+            .then((value) async {
           Navigator.popUntil(context, (route) => route.isFirst);
-
+          // DatabaseReference ref = FirebaseDatabase.instance.ref("AddTasks");
+          // await ref.set(taskModel.toMap());
           catcont.clear();
           titlecont.clear();
           discrpcont.clear();
@@ -283,15 +313,23 @@ class _AddTaskState extends State<AddTask> {
           print("Added successfully");
         });
       } else {
+        // DatabaseReference ref =
+        //     FirebaseDatabase.instance.ref(widget.taskModel!.reff!.path);
+
         widget.taskModel!.category = catcont.text;
         widget.taskModel!.title = titlecont.text;
         widget.taskModel!.dueDate = dueDatecont.text;
-        widget.taskModel!.discrp = discrpcont.text;
+        widget.taskModel!.discrp =
+            jsonEncode(quillcont.document.toDelta().toJson());
         widget.taskModel!.editTime = Timestamp.now();
 
-        widget.taskModel!.reff!.set(widget.taskModel!.toMap()).then(
-              (value) => Navigator.popUntil(context, (route) => route.isFirst),
-            );
+        widget.taskModel!.reff!
+            .set(widget.taskModel!.toMap())
+            .then((value) async {
+          // DatabaseReference ref = FirebaseDatabase.instance.ref("AddTasks");
+          // ref.update(widget.taskModel!.toMap());
+          Navigator.popUntil(context, (route) => route.isFirst);
+        });
       }
       print("try ended");
     } catch (e) {
