@@ -56,7 +56,6 @@ class TasksProvider with ChangeNotifier {
       print("adding category");
       var data = {"category": category};
       // FirebaseDatabase.instance.setPersistenceEnabled(true);
-
       await FirebaseFirestore.instance
           .collection("UserData")
           .doc(FirebaseAuth.instance.currentUser!.uid)

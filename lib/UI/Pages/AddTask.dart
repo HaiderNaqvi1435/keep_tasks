@@ -11,6 +11,7 @@ import 'package:keep_tasks/Core/Classes/Database/TasksProvider.dart';
 import 'package:keep_tasks/Core/Classes/Models/NoteModel.dart';
 import 'package:keep_tasks/Core/Classes/Themes/MyTheme.dart';
 import 'package:keep_tasks/Core/Classes/Themes/Utils.dart';
+import 'package:keep_tasks/UI/Pages/HomePage.dart';
 import 'package:provider/provider.dart';
 
 class AddTask extends StatefulWidget {
@@ -281,10 +282,10 @@ class _AddTaskState extends State<AddTask> {
 
   addData() async {
     print("Adding ");
-    showDialog(
-      context: context,
-      builder: (context) => Center(child: CircularProgressIndicator()),
-    );
+    // showDialog(
+    //   context: context,
+    //   builder: (context) => Center(child: CircularProgressIndicator()),
+    // );
     print("dialogue ");
     print(FirebaseAuth.instance.currentUser!.uid);
     try {
@@ -297,24 +298,34 @@ class _AddTaskState extends State<AddTask> {
           dueDate: dueDatecont.text,
           discrp: jsonEncode(quillcont.document.toDelta().toJson()),
         );
-
+        // Navigator.popUntil(context, (route) => route.isFirst);
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomePage(),
+            ));
         await FirebaseFirestore.instance
             .collection("Tasks")
             .add(taskModel.toMap())
             .then((value) async {
-          Navigator.popUntil(context, (route) => route.isFirst);
           // DatabaseReference ref = FirebaseDatabase.instance.ref("AddTasks");
           // await ref.set(taskModel.toMap());
-          catcont.clear();
-          titlecont.clear();
-          discrpcont.clear();
-          dueDatecont.clear();
+          // catcont.clear();
+          // titlecont.clear();
+          // discrpcont.clear();
+          // dueDatecont.clear();
 
           print("Added successfully");
         });
+
+        catcont.clear();
+        titlecont.clear();
+        discrpcont.clear();
+        dueDatecont.clear();
       } else {
         // DatabaseReference ref =
         //     FirebaseDatabase.instance.ref(widget.taskModel!.reff!.path);
+        // Navigator.popUntil(context, (route) => route.isFirst);
 
         widget.taskModel!.category = catcont.text;
         widget.taskModel!.title = titlecont.text;
@@ -322,13 +333,16 @@ class _AddTaskState extends State<AddTask> {
         widget.taskModel!.discrp =
             jsonEncode(quillcont.document.toDelta().toJson());
         widget.taskModel!.editTime = Timestamp.now();
-
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomePage(),
+            ));
         widget.taskModel!.reff!
             .set(widget.taskModel!.toMap())
             .then((value) async {
           // DatabaseReference ref = FirebaseDatabase.instance.ref("AddTasks");
           // ref.update(widget.taskModel!.toMap());
-          Navigator.popUntil(context, (route) => route.isFirst);
         });
       }
       print("try ended");
