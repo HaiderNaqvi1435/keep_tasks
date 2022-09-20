@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         builder: (context, value, child) => MaterialApp(
           // theme: MyThemes.MyDarkTheme,
 
-          theme: MyThemes.MyTheme(value.isDark, context),
+          theme: MyThemes.myTheme(value.isDark, context),
           // darkTheme: MyThemes.MyTheme(true, context),
           home: AuthManager().loginservice(),
           debugShowCheckedModeBanner: false,

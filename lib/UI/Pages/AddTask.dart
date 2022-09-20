@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,9 +8,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
 import 'package:keep_tasks/Core/Classes/Database/TasksProvider.dart';
 import 'package:keep_tasks/Core/Classes/Models/NoteModel.dart';
-import 'package:keep_tasks/Core/Classes/Themes/MyTheme.dart';
 import 'package:keep_tasks/Core/Classes/Themes/Utils.dart';
-import 'package:keep_tasks/UI/Pages/HomePage.dart';
 import 'package:provider/provider.dart';
 
 class AddTask extends StatefulWidget {
@@ -23,9 +20,8 @@ class AddTask extends StatefulWidget {
 
 class _AddTaskState extends State<AddTask> {
   ScrollController scrollController = ScrollController();
-  // String? editTime;
   QuillController quillcont = QuillController.basic();
-  var formatter = new DateFormat('d MMM, yyyy - hh:mm a');
+  var formatter = DateFormat('d MMM, yyyy - hh:mm a');
   TextEditingController catcont = TextEditingController();
   TextEditingController titlecont = TextEditingController();
   TextEditingController discrpcont = TextEditingController();
@@ -34,25 +30,14 @@ class _AddTaskState extends State<AddTask> {
   bool toolbar = false;
   @override
   void initState() {
-// var myjson = "[
-//       {"insert": "Description \n"}
-//     ];
     if (widget.taskModel != null) {
       catcont.text = widget.taskModel!.category!;
       titlecont.text = widget.taskModel!.title!;
       dueDatecont.text = widget.taskModel!.dueDate!;
-
       quillcont = QuillController(
           document: Document.fromJson(jsonDecode(widget.taskModel!.discrp)),
           selection: TextSelection.collapsed(offset: 0));
-
-      // quillcont = QuillController(
-      //     document: Document(),
-      //     selection: TextSelection.collapsed(offset: 0));
-
-      // quillcont.document. = widget.taskModel!.discrp!.;
     }
-
     super.initState();
   }
 
@@ -61,39 +46,32 @@ class _AddTaskState extends State<AddTask> {
     String? editTime;
     if (widget.taskModel != null) {
       Timestamp gettime = widget.taskModel!.editTime!;
-
       editTime = DateFormat.yMd().add_jm().format(gettime.toDate());
     }
     Size size = MediaQuery.of(context).size;
     return Consumer<TasksProvider>(
-      builder: (context, task, child) => Scaffold(
-        // backgroundColor: MyThemes.MyTheme.colorScheme.onPrimary,
-        appBar: AppBar(
-          title: Text(widget.taskModel != null ? "Update Task" : "Add Task"),
-          actions: [
-            IconButton(
-              onPressed: () async {
-                if (formkey.currentState!.validate()) {
-                  addData();
-
-                  task.addCategory(category: catcont.text);
-                }
-              },
-              icon: Icon(Icons.done),
-            ),
-            IconButton(
-                onPressed: () {
-                  // print(quillcont.document.toPlainText());
-                  // print(quillcont.document.toPlainText());
+      builder: (context, task, child) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(widget.taskModel != null ? "Update Task" : "Add Task"),
+            actions: [
+              IconButton(
+                onPressed: () async {
+                  if (formkey.currentState!.validate()) {
+                    addData();
+                    task.addCategory(category: catcont.text);
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(const SnackBar(content: Text("Saved!")));
+                  }
                 },
-                icon: Icon(Icons.refresh))
-          ],
-        ),
-        body: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Container(
+                icon: Icon(Icons.done),
+              ),
+            ],
+          ),
+          body: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Form(
@@ -108,7 +86,7 @@ class _AddTaskState extends State<AddTask> {
                                     style: TextStyle(fontSize: 14),
                                     controller: catcont,
                                     decoration:
-                                        Utils.MytextField(Label: "Category")),
+                                        Utils.myTextField(label: "Category")),
                                 suggestionsCallback: (pattern) {
                                   return task.catlist.where((element) => element
                                       .toLowerCase()
@@ -133,10 +111,10 @@ class _AddTaskState extends State<AddTask> {
                                     return null;
                                 },
                               ),
-                              SizedBox(height: 20),
+                              const SizedBox(height: 20),
                               DateTimeField(
                                 decoration:
-                                    Utils.MytextField(Label: "Due Date"),
+                                    Utils.myTextField(label: "Due Date"),
                                 controller: dueDatecont,
                                 format: formatter,
                                 onShowPicker: (context, currentValue) async {
@@ -152,13 +130,13 @@ class _AddTaskState extends State<AddTask> {
                                       initialTime: TimeOfDay.fromDateTime(
                                           currentValue ?? DateTime.now()),
                                     );
-
                                     return DateTimeField.combine(date, time);
                                   } else {
                                     print(currentValue);
                                     return currentValue;
                                   }
                                 },
+                                onChanged: (value) {},
                                 validator: (value) {
                                   if (dueDatecont.text.isEmpty) {
                                     return "Select Time";
@@ -166,7 +144,7 @@ class _AddTaskState extends State<AddTask> {
                                     return null;
                                 },
                               ),
-                              SizedBox(height: 20),
+                              const SizedBox(height: 20),
                               TextFormField(
                                 validator: (value) {
                                   if (value!.isEmpty || value == null) {
@@ -174,60 +152,25 @@ class _AddTaskState extends State<AddTask> {
                                   } else
                                     return null;
                                 },
-                                decoration: Utils.MytextField(
-                                  Label: "Title",
+                                decoration: Utils.myTextField(
+                                  label: "Title",
                                 ),
-                                onChanged: (value) {
-                                  print(value);
-                                },
+                                onChanged: (value) {},
                                 controller: titlecont,
                               ),
-                              SizedBox(height: 20),
-                              // ConstrainedBox(
-                              //   constraints: BoxConstraints(
-                              //     minWidth: size.width,
-                              //     maxWidth: size.width,
-                              //     minHeight: 25.0,
-                              //     maxHeight: MediaQuery.of(context).size.height / 2,
-                              //   ),
-                              //   child: Scrollbar(
-                              //     child: Padding(
-                              //       padding: const EdgeInsets.only(left: 10.0),
-                              //       child: TextFormField(
-                              //         // validator: (value) {
-                              //         //   if (value!.isEmpty) {
-                              //         //     return " Answer should not be empty";
-                              //         //   } else {
-                              //         //     null;
-                              //         //   }
-                              //         // },
-                              //         keyboardType: TextInputType.multiline,
-                              //         maxLines: null,
-                              //         decoration: InputDecoration(
-                              //           hintText: "Discrption",
-                              //           border: InputBorder.none,
-                              //         ),
-                              //         onChanged: (value) {
-                              //           print(value);
-                              //         },
-                              //         controller: discrpcont,
-                              //       ),
-                              //     ),
-                              //   ),
-                              // ),
-
+                              const SizedBox(height: 20),
                               QuillEditor(
                                 showCursor: true,
                                 scrollable: false,
                                 expands: false,
-                                padding: EdgeInsets.all(8),
+                                padding: const EdgeInsets.all(8),
                                 scrollController: scrollController,
                                 autoFocus: true,
                                 focusNode: FocusNode(),
                                 controller: quillcont,
                                 readOnly: false,
                               ),
-                              SizedBox(height: 20),
+                              const SizedBox(height: 20),
                             ],
                           ),
                           SingleChildScrollView(
@@ -246,43 +189,38 @@ class _AddTaskState extends State<AddTask> {
                   ),
                 ),
               ),
-            ),
-            Divider(
-              height: 0,
-              thickness: 2,
-            ),
-            if (widget.taskModel != null)
-              Container(
-                height: 40,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(width: 25),
-                    Text("Edited on $editTime"),
-                    IconButton(
-                        onPressed: () async {
-                          widget.taskModel!.reff!.delete();
-                          await task.getTasks();
-
-                          Navigator.pop(context);
-                          setState(() {});
-                        },
-                        icon: Icon(Icons.delete)),
-                  ],
-                ),
+              const Divider(
+                height: 0,
+                thickness: 2,
               ),
-          ],
-        ),
-      ),
+              if (widget.taskModel != null)
+                SizedBox(
+                  height: 40,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const SizedBox(width: 25),
+                      Text("Edited on $editTime"),
+                      IconButton(
+                          onPressed: () async {
+                            widget.taskModel!.reff!.delete();
+                            await task.getTasks();
+                            Navigator.pop(context);
+                            setState(() {});
+                          },
+                          icon: Icon(Icons.delete)),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+        );
+      },
     );
   }
 
   addData() async {
     print("Adding...");
-    // showDialog(
-    //   context: context,
-    //   builder: (context) => Center(child: CircularProgressIndicator()),
-    // );
     print("dialogue ");
     print(FirebaseAuth.instance.currentUser!.uid);
     try {
@@ -295,52 +233,26 @@ class _AddTaskState extends State<AddTask> {
           dueDate: dueDatecont.text,
           discrp: jsonEncode(quillcont.document.toDelta().toJson()),
         );
-        // Navigator.popUntil(context, (route) => route.isFirst);
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => HomePage(),
-            ));
         await FirebaseFirestore.instance
             .collection("Tasks")
             .add(taskModel.toMap())
             .then((value) async {
-          // DatabaseReference ref = FirebaseDatabase.instance.ref("AddTasks");
-          // await ref.set(taskModel.toMap());
-          // catcont.clear();
-          // titlecont.clear();
-          // discrpcont.clear();
-          // dueDatecont.clear();
-
           print("Added successfully");
         });
-
         catcont.clear();
         titlecont.clear();
         discrpcont.clear();
         dueDatecont.clear();
       } else {
-        // DatabaseReference ref =
-        //     FirebaseDatabase.instance.ref(widget.taskModel!.reff!.path);
-        // Navigator.popUntil(context, (route) => route.isFirst);
-
         widget.taskModel!.category = catcont.text;
         widget.taskModel!.title = titlecont.text;
         widget.taskModel!.dueDate = dueDatecont.text;
         widget.taskModel!.discrp =
             jsonEncode(quillcont.document.toDelta().toJson());
         widget.taskModel!.editTime = Timestamp.now();
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => HomePage(),
-            ));
         widget.taskModel!.reff!
             .set(widget.taskModel!.toMap())
-            .then((value) async {
-          // DatabaseReference ref = FirebaseDatabase.instance.ref("AddTasks");
-          // ref.update(widget.taskModel!.toMap());
-        });
+            .then((value) async {});
       }
       print("try ended");
     } catch (e) {

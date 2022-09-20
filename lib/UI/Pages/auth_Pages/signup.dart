@@ -1,25 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:keep_tasks/Core/Classes/Database/AuthProviders.dart';
 import 'package:keep_tasks/Core/Classes/Models/UserModel.dart';
 import 'package:keep_tasks/Core/Classes/Themes/Utils.dart';
 import 'package:keep_tasks/UI/Pages/auth_Pages/Login.dart';
 import 'package:keep_tasks/UI/Pages/auth_Pages/VerifyEmail.dart';
-import 'package:provider/provider.dart';
-
-import '../../../Core/Classes/Themes/MyTheme.dart';
-
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
-
   @override
   State<SignUp> createState() => _SignUpState();
 }
-
 class _SignUpState extends State<SignUp> {
   final GlobalKey<FormState> formkey = GlobalKey<FormState>();
-
   TextEditingController namecont = TextEditingController();
   TextEditingController emailcont = TextEditingController();
   TextEditingController passcont = TextEditingController();
@@ -139,7 +131,7 @@ class _SignUpState extends State<SignUp> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Already have an account?'),
+                        const Text('Already have an account?'),
                         InkWell(
                           onTap: () {
                             Navigator.pushReplacement(
@@ -153,7 +145,6 @@ class _SignUpState extends State<SignUp> {
                             style: Utils.metaText(
                               size: 12,
                               bold: true,
-                              // color: MyThemes.MyTheme.colorScheme.primary,
                             ),
                           ),
                         ),
@@ -166,7 +157,6 @@ class _SignUpState extends State<SignUp> {
       ),
     );
   }
-
   addUser() async {
     showDialog(
       context: context,
@@ -189,7 +179,6 @@ class _SignUpState extends State<SignUp> {
             .set(userData.toMap());
       }).then((value) {
         Navigator.popUntil(context, (route) => route.isFirst);
-
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(

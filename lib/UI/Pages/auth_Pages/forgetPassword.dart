@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:keep_tasks/Core/Classes/Themes/Utils.dart';
@@ -17,7 +16,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Reset Password"),
+        title: const Text("Reset Password"),
       ),
       body: Form(
         key: formKey,
@@ -31,7 +30,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                 "Enter your Email",
                 style: Utils.normalText(size: 16),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: emailCont,
                 textInputAction: TextInputAction.done,
@@ -42,15 +41,15 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                   } else
                     null;
                 },
-                decoration: Utils.MytextField(Label: "Email"),
+                decoration: Utils.myTextField(label: "Email"),
               ),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               ElevatedButton(
                   // style: ElevatedButton.styleFrom(
                   //   minimumSize: Size.fromHeight(50),
                   // ),
                   onPressed: verifyEmail,
-                  child: Text(
+                  child: const Text(
                     "Reset Password",
                   )),
             ],
@@ -69,17 +68,12 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     try {
       await FirebaseAuth.instance
           .sendPasswordResetEmail(email: emailCont.text.toLowerCase().trim());
-      showBottomSheet(
-        context: context,
-        builder: (context) =>
-            SnackBar(content: Text("Email sent successfully")),
-      );
+       ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text("Email sent successfully!")));
       Navigator.of(context).popUntil((route) => route.isFirst);
     } on FirebaseException catch (e) {
-      showBottomSheet(
-        context: context,
-        builder: (context) => SnackBar(content: Text(e.toString())),
-      );
+      ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text(e.toString())));
       Navigator.of(context).pop();
     }
   }

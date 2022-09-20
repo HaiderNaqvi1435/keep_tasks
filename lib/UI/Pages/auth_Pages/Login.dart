@@ -6,10 +6,7 @@ import 'package:keep_tasks/UI/Pages/auth_Pages/forgetPassword.dart';
 import 'package:keep_tasks/UI/Pages/auth_Pages/signup.dart';
 import 'package:provider/provider.dart';
 
-import '../../../Core/Classes/Database/AuthProviders.dart';
 import '../../../Core/Classes/Database/TasksProvider.dart';
-import '../../../Core/Classes/Themes/MyTheme.dart';
-import '../HomePage.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -96,7 +93,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         'Forget Password?',
                         style: Utils.metaText(
                           size: 12,
-                          // color: MyThemes.MyTheme.colorScheme.primary
                         ),
                       ),
                     ),
@@ -123,10 +119,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             .then((value) {
                           Navigator.of(context)
                               .popUntil((route) => route.isFirst);
+
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => VerifyEmail(),
+                                builder: (context) =>
+                                    ChangeNotifierProvider<TasksProvider>(
+                                        create: (context) => TasksProvider(),
+                                        child: VerifyEmail()),
                               ));
 
                           print("Login success");
@@ -138,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                      minimumSize: Size(250, 45),
+                      minimumSize: const Size(250, 45),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10))),
                   child: Text(
@@ -149,11 +149,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Already have an account?'),
+                    const Text('Do not have an account?'),
                     InkWell(
                       onTap: () {
                         Navigator.pushReplacement(
@@ -167,27 +166,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: Utils.metaText(
                           size: 12,
                           bold: true,
-                          // color: MyThemes.MyTheme.colorScheme.primary,
                         ),
                       ),
                     ),
                   ],
                 ),
-                // Text.rich(
-                //   TextSpan(
-                //     children: [
-                //        TextSpan(text: 'Already have an account? '),
-                //       TextSpan(
-                //         text: 'Sign up',
-                //         style: Utils.metaText(
-                //           size: 16,
-                //           bold: true,
-                //           color: MyThemes.MyTheme.colorScheme.primary,
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                // ),
               ],
             ),
           ),
