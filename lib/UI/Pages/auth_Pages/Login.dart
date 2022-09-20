@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:keep_tasks/Core/Classes/Themes/Utils.dart';
+import 'package:keep_tasks/UI/Pages/auth_Pages/VerifyEmail.dart';
+import 'package:keep_tasks/UI/Pages/auth_Pages/forgetPassword.dart';
 import 'package:keep_tasks/UI/Pages/auth_Pages/signup.dart';
 import 'package:provider/provider.dart';
 
@@ -84,11 +86,19 @@ class _LoginScreenState extends State<LoginScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text(
-                      'Forget Password?',
-                      style: Utils.metaText(
+                    InkWell(
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ForgetPassword(),
+                          )),
+                      child: Text(
+                        'Forget Password?',
+                        style: Utils.metaText(
                           size: 12,
-                          color: MyThemes.MyTheme.colorScheme.primary),
+                          // color: MyThemes.MyTheme.colorScheme.primary
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -116,7 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => HomePage(),
+                                builder: (context) => VerifyEmail(),
                               ));
 
                           print("Login success");
@@ -157,7 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: Utils.metaText(
                           size: 12,
                           bold: true,
-                          color: MyThemes.MyTheme.colorScheme.primary,
+                          // color: MyThemes.MyTheme.colorScheme.primary,
                         ),
                       ),
                     ),

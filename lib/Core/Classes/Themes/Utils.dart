@@ -6,7 +6,7 @@ import 'package:keep_tasks/Core/Classes/Themes/MyTheme.dart';
 class Utils {
   static TextStyle appName({Color? color, double? size}) {
     return TextStyle(
-      color: color ?? Colors.white,
+      // color: color ?? Colors.white,
       fontSize: size ?? 22,
       fontWeight: FontWeight.bold,
     );
@@ -14,7 +14,7 @@ class Utils {
 
   static TextStyle normalText({Color? color, double? size, bool bold = false}) {
     return TextStyle(
-      color: color ?? Colors.white,
+      // color: color ?? Colors.white,
       fontSize: size ?? 16,
       // fontWeight: FontWeight.bold,
       fontWeight: bold ? FontWeight.bold : FontWeight.normal,
@@ -28,7 +28,7 @@ class Utils {
   }) {
     return TextStyle(
       fontFamily: GoogleFonts.exo2().fontFamily,
-      color: color ?? Colors.white,
+      // color: color ?? Colors.white,
       fontSize: size ?? 14,
       fontWeight: bold ? FontWeight.bold : FontWeight.normal,
     );
@@ -41,7 +41,7 @@ class Utils {
   }) {
     return TextStyle(
       fontFamily: GoogleFonts.roboto().fontFamily,
-      color: color ?? Colors.white,
+      // color: color ?? Colors.white,
       fontSize: size ?? 14,
       fontWeight: bold ? FontWeight.w900 : FontWeight.normal,
     );
@@ -61,8 +61,8 @@ class Utils {
       labelText: Label,
       hintText: hint,
 
-      filled: true,
-      fillColor: color ?? MyThemes.MyTheme.colorScheme.onPrimary,
+      // filled: true,
+      // fillColor: color ?? MyThemes.MyTheme.colorScheme.onPrimary,
       // prefixIcon: Icon(iconData),
       hintStyle: TextStyle(fontSize: 14),
       labelStyle: TextStyle(fontSize: 14),

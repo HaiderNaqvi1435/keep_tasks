@@ -5,6 +5,7 @@ import 'package:keep_tasks/Core/Classes/Database/AuthProviders.dart';
 import 'package:keep_tasks/Core/Classes/Models/UserModel.dart';
 import 'package:keep_tasks/Core/Classes/Themes/Utils.dart';
 import 'package:keep_tasks/UI/Pages/auth_Pages/Login.dart';
+import 'package:keep_tasks/UI/Pages/auth_Pages/VerifyEmail.dart';
 import 'package:provider/provider.dart';
 
 import '../../../Core/Classes/Themes/MyTheme.dart';
@@ -134,6 +135,7 @@ class _SignUpState extends State<SignUp> {
                         style: Utils.normalText(size: 20, bold: true),
                       ),
                     ),
+                    SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -149,9 +151,9 @@ class _SignUpState extends State<SignUp> {
                           child: Text(
                             'Login',
                             style: Utils.metaText(
-                              size: 16,
+                              size: 12,
                               bold: true,
-                              color: MyThemes.MyTheme.colorScheme.primary,
+                              // color: MyThemes.MyTheme.colorScheme.primary,
                             ),
                           ),
                         ),
@@ -186,16 +188,14 @@ class _SignUpState extends State<SignUp> {
             .doc(value.user!.uid)
             .set(userData.toMap());
       }).then((value) {
-        FirebaseAuth.instance
-            .signOut()
-            .then((value) => Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => LoginScreen(),
-                )));
-      });
+        Navigator.popUntil(context, (route) => route.isFirst);
 
-      Navigator.popUntil(context, (route) => route.isFirst);
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => VerifyEmail(),
+            ));
+      });
     } catch (e) {
       Navigator.of(context).pop();
       print("Something went wrong $e");

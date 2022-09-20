@@ -67,17 +67,16 @@ class _AddTaskState extends State<AddTask> {
     Size size = MediaQuery.of(context).size;
     return Consumer<TasksProvider>(
       builder: (context, task, child) => Scaffold(
-        backgroundColor: MyThemes.MyTheme.colorScheme.onPrimary,
+        // backgroundColor: MyThemes.MyTheme.colorScheme.onPrimary,
         appBar: AppBar(
           title: Text(widget.taskModel != null ? "Update Task" : "Add Task"),
           actions: [
             IconButton(
               onPressed: () async {
                 if (formkey.currentState!.validate()) {
-                  await task.addCategory(category: catcont.text);
+                  addData();
 
-                  await addData();
-                  await task.getTasks();
+                  task.addCategory(category: catcont.text);
                 }
               },
               icon: Icon(Icons.done),
@@ -258,9 +257,7 @@ class _AddTaskState extends State<AddTask> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(
-                      width: 25,
-                    ),
+                    SizedBox(width: 25),
                     Text("Edited on $editTime"),
                     IconButton(
                         onPressed: () async {
@@ -281,7 +278,7 @@ class _AddTaskState extends State<AddTask> {
   }
 
   addData() async {
-    print("Adding ");
+    print("Adding...");
     // showDialog(
     //   context: context,
     //   builder: (context) => Center(child: CircularProgressIndicator()),

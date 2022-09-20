@@ -24,10 +24,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<TasksProvider>(
       create: (context) => TasksProvider(),
-      child: MaterialApp(
-        theme: MyThemes.MyTheme,
-        home: AuthManager().loginservice(),
-        debugShowCheckedModeBanner: false,
+      child: Consumer<TasksProvider>(
+        builder: (context, value, child) => MaterialApp(
+          // theme: MyThemes.MyDarkTheme,
+
+          theme: MyThemes.MyTheme(value.isDark, context),
+          // darkTheme: MyThemes.MyTheme(true, context),
+          home: AuthManager().loginservice(),
+          debugShowCheckedModeBanner: false,
+        ),
       ),
     );
   }

@@ -10,7 +10,7 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: MyThemes.MyTheme.colorScheme.background,
+      
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.transparent,

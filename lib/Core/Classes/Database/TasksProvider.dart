@@ -14,6 +14,13 @@ class TasksProvider with ChangeNotifier {
     getCategories();
     getUser();
   }
+  bool isDark = false;
+  isDarkTheme({bool? value}) {
+    isDark = value!;
+    print(isDark);
+    notifyListeners();
+  }
+
   TaskModel taskModel = TaskModel();
   UserData userData = UserData();
   getUser() async {
@@ -63,6 +70,7 @@ class TasksProvider with ChangeNotifier {
           .add(data)
           .then((value) {
         getCategories();
+        getTasks();
         notifyListeners();
         print("added");
       });

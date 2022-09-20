@@ -15,7 +15,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  
   TextEditingController searchcont = TextEditingController();
   var formatter = new DateFormat('d MMM, yyyy - hh:mm a');
 
@@ -26,38 +25,38 @@ class _HomePageState extends State<HomePage> {
 
     return Consumer<TasksProvider>(
       builder: (context, task, child) => Scaffold(
-        backgroundColor: MyThemes.MyTheme.colorScheme.background,
         appBar: AppBar(
-          backgroundColor: MyThemes.MyTheme.colorScheme.background,
           elevation: 0,
-          iconTheme:
-              IconThemeData(color: MyThemes.MyTheme.colorScheme.onSecondary),
+          // iconTheme:
+          // IconThemeData(color: MyThemes.MyTheme.colorScheme.onSecondary),
           title: Text(
             "Keep Tasks",
           ),
           titleTextStyle: Utils.appName(
-              color: MyThemes.MyTheme.colorScheme.onSecondary,
               // bold: true,
               size: 18),
+          // bottom: PreferredSize(preferredSize: size, child: TextFormField()),
         ),
         drawer: MyDrawer(),
         body: Padding(
           padding: const EdgeInsets.only(left: 16, right: 16),
           child: Column(
             children: [
+              SizedBox(height: 10),
               TextFormField(
                 controller: searchcont,
                 style: Utils.normalText(
-                  color: MyThemes.MyTheme.colorScheme.onSecondary,
-                ),
+                    // color: MyThemes.MyTheme.colorScheme.onSecondary,
+                    ),
                 decoration: InputDecoration(
 
                     // icon: Icon(Icons.search),
                     prefixIcon: Icon(Icons.search),
                     hintText: "Search",
                     isDense: true,
+                    contentPadding: EdgeInsets.zero,
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(borderradius))),
+                        borderRadius: BorderRadius.circular(50))),
                 onChanged: ((value) {
                   setState(() {
                     task.sortedList = task.taskList
@@ -107,7 +106,7 @@ class _HomePageState extends State<HomePage> {
                         padding: const EdgeInsets.only(bottom: 5),
                         child: Card(
                           //246,194,202
-                          color: Color.fromARGB(255, 254, 243, 245),
+                          // color: Color.fromARGB(255, 254, 243, 245),
                           elevation: 5,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
@@ -135,13 +134,14 @@ class _HomePageState extends State<HomePage> {
                               task.sortedList[index].title ?? "",
                               style: Utils.normalText(
                                   size: 16,
-                                  color: MyThemes.MyTheme.colorScheme.primary,
+                                  // color: MyThemes.MyTheme.colorScheme.primary,
                                   bold: true),
                             ),
                             subtitle: Text(
                               task.taskList[index].dueDate ?? "",
                               style: Utils.normalText(
-                                  color: Colors.black54, size: 14),
+                                  // color: Colors.black54, 
+                                  size: 14),
                             ),
                           ),
                         ),
@@ -155,7 +155,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          backgroundColor: MyThemes.MyTheme.colorScheme.primary,
+          // backgroundColor: MyThemes.MyTheme.colorScheme.primary,
           onPressed: () {
             Navigator.push(
                 context,
@@ -166,7 +166,7 @@ class _HomePageState extends State<HomePage> {
           child: Icon(
             Icons.add,
             size: 30,
-            color: MyThemes.MyTheme.colorScheme.onPrimary,
+            // color: MyThemes.MyTheme.colorScheme.onPrimary,
           ),
         ),
       ),
