@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:keep_tasks/Core/Classes/Models/UserModel.dart';
 import '../Models/NoteModel.dart';
+
 class TasksProvider with ChangeNotifier {
   TasksProvider() {
     getTasks();
@@ -16,6 +17,7 @@ class TasksProvider with ChangeNotifier {
     print(isDark);
     notifyListeners();
   }
+
   TaskModel taskModel = TaskModel();
   UserData userData = UserData();
   getUser() async {
@@ -27,7 +29,9 @@ class TasksProvider with ChangeNotifier {
       userData = UserData.fromMap(value.data()!);
       notifyListeners();
     });
+    notifyListeners();
   }
+
   List<TaskModel> sortedList = [];
   List<String> catlist = [];
   getCategories() async {
@@ -43,7 +47,9 @@ class TasksProvider with ChangeNotifier {
       notifyListeners();
       print(catlist);
     });
+    notifyListeners();
   }
+
   addCategory({String? category}) async {
     bool isAvail = catlist.contains(category);
     if (isAvail == true) {
@@ -57,13 +63,15 @@ class TasksProvider with ChangeNotifier {
           .collection("Categories")
           .add(data)
           .then((value) {
-        getCategories();
-        getTasks();
-        notifyListeners();
         print("added");
       });
+      getTasks();
+      getCategories();
+      notifyListeners();
     }
+    notifyListeners();
   }
+
   List<TaskModel> taskList = [];
   getTasks() async {
     print("Getting tasks");
@@ -83,5 +91,6 @@ class TasksProvider with ChangeNotifier {
       print("Got tasks");
       notifyListeners();
     });
+    notifyListeners();
   }
 }
