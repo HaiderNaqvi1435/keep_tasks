@@ -101,49 +101,51 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(
                   height: 50,
                 ),
-                ElevatedButton(
-                  onPressed: () async {
-                    if (formkey.currentState!.validate()) {
-                      showDialog(
-                        context: context,
-                        builder: (context) =>
-                            Center(child: CircularProgressIndicator()),
-                        barrierDismissible: false,
-                      );
+                Consumer<TasksProvider>(
+                  builder: (context, task, child) => ElevatedButton(
+                    onPressed: () async {
+                      if (formkey.currentState!.validate()) {
+                        showDialog(
+                          context: context,
+                          builder: (context) =>
+                              Center(child: CircularProgressIndicator()),
+                          barrierDismissible: false,
+                        );
 
-                      try {
-                        await FirebaseAuth.instance
-                            .signInWithEmailAndPassword(
-                                email: emailcont.text.toLowerCase().trim(),
-                                password: passcont.text)
-                            .then((value) {
-                          Navigator.of(context)
-                              .popUntil((route) => route.isFirst);
+                        try {
+                          await FirebaseAuth.instance
+                              .signInWithEmailAndPassword(
+                                  email: emailcont.text.toLowerCase().trim(),
+                                  password: passcont.text)
+                              .then((value) {
+                            Navigator.of(context)
+                                .popUntil((route) => route.isFirst);
 
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    ChangeNotifierProvider<TasksProvider>(
-                                        create: (context) => TasksProvider(),
-                                        child: VerifyEmail()),
-                              ));
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      ChangeNotifierProvider<TasksProvider>(
+                                          create: (context) => TasksProvider(),
+                                          child: VerifyEmail()),
+                                ));
 
-                          print("Login success");
-                        });
-                      } catch (e) {
-                        print(e);
-                        Navigator.pop(context);
+                            print("Login success");
+                          });
+                        } catch (e) {
+                          print(e);
+                          Navigator.pop(context);
+                        }
                       }
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(250, 45),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10))),
-                  child: Text(
-                    'Login',
-                    style: Utils.normalText(size: 20, bold: true),
+                    },
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(250, 45),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10))),
+                    child: Text(
+                      'Login',
+                      style: Utils.normalText(size: 20, bold: true),
+                    ),
                   ),
                 ),
                 const SizedBox(

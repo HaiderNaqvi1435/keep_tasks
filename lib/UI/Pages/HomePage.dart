@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart' hide Text;
+import 'package:flutter_share/flutter_share.dart';
 import 'package:intl/intl.dart';
 import 'package:keep_tasks/Core/Classes/Database/TasksProvider.dart';
 import 'package:keep_tasks/Core/Classes/Themes/Utils.dart';
@@ -107,9 +111,23 @@ class _HomePageState extends State<HomePage> {
                               style: Utils.normalText(size: 16, bold: true),
                             ),
                             subtitle: Text(
-                              task.taskList[index].dueDate ?? "",
+                              task.sortedList[index].dueDate ?? "",
                               style: Utils.normalText(size: 14),
                             ),
+                            trailing: IconButton(
+                                onPressed: () async {
+                                  QuillController quillcont = QuillController(
+                                      document: Document.fromJson(jsonDecode(
+                                          task.sortedList[index].discrp)),
+                                      selection:
+                                          const TextSelection.collapsed(offset: 0));
+                                  await FlutterShare.share(
+                                    title: task.sortedList[index].title!,
+                                    text:
+                                        "${task.sortedList[index].title} \n ${quillcont.toString()}",
+                                  );
+                                },
+                                icon: const Icon(Icons.share)),
                           ),
                         ),
                       );
@@ -137,4 +155,8 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  // sharetask() async {
+  //   await FlutterShare.share(title: "sdsad", text: "sdsadas");
+  // }
 }

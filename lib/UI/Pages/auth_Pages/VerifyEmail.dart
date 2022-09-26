@@ -9,6 +9,7 @@ class VerifyEmail extends StatefulWidget {
   State<VerifyEmail> createState() => _VerifyEmailState();
 }
 class _VerifyEmailState extends State<VerifyEmail> {
+  
   sendNewEmail() async {
     try {
       await FirebaseAuth.instance.currentUser!.sendEmailVerification();
@@ -38,6 +39,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
   Timer? timer;
   @override
   void initState() {
+    
     isVerified = FirebaseAuth.instance.currentUser!.emailVerified;
     if (!isVerified) {
       sendNewEmail();
