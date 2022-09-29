@@ -11,12 +11,12 @@ class TasksProvider with ChangeNotifier {
     getCategories();
     getUser();
   }
-  bool isDark = false;
-  isDarkTheme({bool? value}) {
-    isDark = value!;
-    print(isDark);
-    notifyListeners();
-  }
+  // bool isDark = false;
+  // isDarkTheme({bool value = false}) {
+  //   isDark = value;
+  //   print(isDark);
+  //   notifyListeners();
+  // }
 
   TaskModel taskModel = TaskModel();
   UserData userData = UserData();
@@ -27,6 +27,7 @@ class TasksProvider with ChangeNotifier {
         .get()
         .then((value) {
       userData = UserData.fromMap(value.data()!);
+      userData.uref = value.reference;
       notifyListeners();
     });
     notifyListeners();
@@ -54,6 +55,9 @@ class TasksProvider with ChangeNotifier {
     bool isAvail = catlist.contains(category);
     if (isAvail == true) {
       print("Alreay in Category");
+      getTasks();
+      getCategories();
+      notifyListeners();
     } else {
       print("adding category");
       var data = {"category": category};
@@ -69,7 +73,6 @@ class TasksProvider with ChangeNotifier {
       getCategories();
       notifyListeners();
     }
-    notifyListeners();
   }
 
   List<TaskModel> taskList = [];

@@ -233,16 +233,13 @@ class _AddTaskState extends State<AddTask> {
           dueDate: dueDatecont.text,
           discrp: jsonEncode(quillcont.document.toDelta().toJson()),
         );
+
         await FirebaseFirestore.instance
             .collection("Tasks")
             .add(taskModel.toMap())
             .then((value) async {
           print("Added successfully");
         });
-        catcont.clear();
-        titlecont.clear();
-        discrpcont.clear();
-        dueDatecont.clear();
       } else {
         widget.taskModel!.category = catcont.text;
         widget.taskModel!.title = titlecont.text;

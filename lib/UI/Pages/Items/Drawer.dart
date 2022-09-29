@@ -2,14 +2,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:keep_tasks/Core/Classes/Database/TasksProvider.dart';
+import 'package:keep_tasks/Core/Classes/Models/UserModel.dart';
 import 'package:keep_tasks/Core/Classes/Themes/Utils.dart';
 import 'package:keep_tasks/UI/Pages/auth_Pages/Login.dart';
 import 'package:provider/provider.dart';
+
 class MyDrawer extends StatefulWidget {
   MyDrawer({Key? key}) : super(key: key);
   @override
   State<MyDrawer> createState() => _MyDrawerState();
 }
+
 class _MyDrawerState extends State<MyDrawer> {
   bool selected = false;
   TextEditingController addCatcont = TextEditingController();
@@ -63,8 +66,7 @@ class _MyDrawerState extends State<MyDrawer> {
                               elevation: 5,
                               title: Text(
                                 "New Category",
-                                style: Utils.normalText(
-                                    ),
+                                style: Utils.normalText(),
                               ),
                               content: TextFormField(
                                 controller: addCatcont,
@@ -130,10 +132,16 @@ class _MyDrawerState extends State<MyDrawer> {
                     ),
                     ListTile(
                       dense: true,
-                      trailing: CupertinoSwitch(
-                        value: task.isDark,
+                      trailing: Switch(
+                        activeColor: Colors.green,
+                        value: task.userData.isdark!,
                         onChanged: (value) {
-                          task.isDarkTheme(value: value);
+                          task.userData.isdark = value;
+                          task.userData.uref!
+                              .set(task.userData.toMap())
+                              .then((value) => task.getUser());
+                          // print(value);
+                          // task.isDarkTheme(value: value);
                         },
                       ),
                       title: Text(
