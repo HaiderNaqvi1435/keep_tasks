@@ -19,6 +19,7 @@ class AddTask extends StatefulWidget {
 }
 
 class _AddTaskState extends State<AddTask> {
+  bool istapped = false;
   ScrollController scrollController = ScrollController();
   QuillController quillcont = QuillController.basic();
   var formatter = DateFormat('d MMM, yyyy - hh:mm a');
@@ -57,11 +58,19 @@ class _AddTaskState extends State<AddTask> {
             actions: [
               IconButton(
                 onPressed: () async {
-                  if (formkey.currentState!.validate()) {
-                    addData();
-                    task.addCategory(category: catcont.text);
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(const SnackBar(content: Text("Saved!")));
+                  if (istapped == false) {
+                    if (formkey.currentState!.validate()) {
+                      addData();
+                      task.addCategory(category: catcont.text);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Saved!")));
+                    }
+                    setState(() {
+                      istapped = true;
+                    });
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Already Saved!")));
                   }
                 },
                 icon: Icon(Icons.done),
