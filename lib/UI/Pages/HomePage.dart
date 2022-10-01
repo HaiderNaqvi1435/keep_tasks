@@ -27,10 +27,9 @@ class _HomePageState extends State<HomePage> {
       builder: (context, task, child) => Scaffold(
         appBar: AppBar(
           elevation: 0,
-          title: const Text(
-            "Keep Tasks",
+          title: Text(
+            "Praxis Planner",
           ),
-          titleTextStyle: Utils.appName(size: 18),
         ),
         drawer: MyDrawer(),
         body: Padding(
@@ -39,15 +38,29 @@ class _HomePageState extends State<HomePage> {
             children: [
               const SizedBox(height: 10),
               TextFormField(
+                cursorColor: Color.fromARGB(255, 62, 70, 175),
                 controller: searchcont,
                 style: Utils.normalText(),
                 decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.search),
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: Color.fromARGB(255, 62, 70, 175),
+                    ),
                     hintText: "Search",
                     isDense: true,
                     contentPadding: EdgeInsets.zero,
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color.fromARGB(255, 62, 70, 175),
+                      ),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(50))),
+                      // borderSide: BorderSide(
+                      //   color: Color.fromARGB(255, 62, 70, 175),
+                      // ),
+                      borderRadius: BorderRadius.circular(50),
+                    )),
                 onChanged: ((value) {
                   setState(() {
                     task.sortedList = task.taskList
@@ -65,16 +78,13 @@ class _HomePageState extends State<HomePage> {
                       padding: const EdgeInsets.only(right: 5, bottom: 8),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
+                            backgroundColor: Color.fromARGB(255, 62, 70, 175),
+                            foregroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
                                 borderRadius:
                                     BorderRadius.circular(borderradius))),
                         onPressed: () {
-                          setState(() {
-                            task.sortedList = task.taskList
-                                .where((element) =>
-                                    element.category == task.catlist[index])
-                                .toList();
-                          });
+                          task.sortList(index: index);
                         },
                         child: Text(task.catlist[index]),
                       ),
@@ -108,23 +118,28 @@ class _HomePageState extends State<HomePage> {
                             },
                             title: Text(
                               task.sortedList[index].title ?? "",
-                              style: Utils.normalText(size: 16, bold: true),
+                              style: Utils.normalText(
+                                size: 16,
+                                bold: true,
+                              ),
                             ),
                             subtitle: Text(
                               task.sortedList[index].dueDate ?? "",
-                              style: Utils.normalText(size: 14),
+                              style: Utils.normalText(
+                                size: 14,
+                              ),
                             ),
                             trailing: IconButton(
                                 onPressed: () async {
                                   QuillController quillcont = QuillController(
                                       document: Document.fromJson(jsonDecode(
                                           task.sortedList[index].discrp)),
-                                      selection:
-                                          const TextSelection.collapsed(offset: 0));
+                                      selection: const TextSelection.collapsed(
+                                          offset: 0));
                                   await FlutterShare.share(
                                     title: task.sortedList[index].title!,
                                     text:
-                                        "${task.sortedList[index].title} \n ${quillcont.toString()}",
+                                        "${task.sortedList[index].title} \n${quillcont.document.toPlainText()}",
                                   );
                                 },
                                 icon: const Icon(Icons.share)),
@@ -149,6 +164,7 @@ class _HomePageState extends State<HomePage> {
           },
           child: const Icon(
             Icons.add,
+            color: Colors.white,
             size: 30,
           ),
         ),

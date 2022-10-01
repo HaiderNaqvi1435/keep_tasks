@@ -14,7 +14,7 @@ class MyDrawer extends StatefulWidget {
 }
 
 class _MyDrawerState extends State<MyDrawer> {
-  bool selected = false;
+  int? isSelected;
   TextEditingController addCatcont = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -22,24 +22,39 @@ class _MyDrawerState extends State<MyDrawer> {
       builder: (context, task, child) => Drawer(
           child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.only(top: 16, right: 16),
+          padding: const EdgeInsets.only(right: 16),
           child: Column(
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "  Keep Tasks",
-                    style: Utils.appName(),
+                  ListTile(
+                    dense: true,
+                    title: Text(
+                      "  Praxis Planner",
+                      style: Utils.metaText(size: 22),
+                    ),
+                    leading: SizedBox(
+                      height: 30,
+                      width: 30,
+                      child: Image.asset(
+                        "assets/Praxis Planner.png",
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  const Divider(
+                    height: 0,
+                    thickness: 2,
                   ),
                   ListTile(
                     title: Text(
                       task.userData.name ?? "",
-                      style: Utils.normalText(bold: true),
+                      style: Utils.metaText(size: 18, bold: true),
                     ),
                     subtitle: Text(
                       FirebaseAuth.instance.currentUser!.email.toString(),
-                      style: Utils.normalText(bold: true, size: 14),
+                      style: Utils.metaText(size: 14),
                     ),
                   ),
                   const Divider(
@@ -74,6 +89,10 @@ class _MyDrawerState extends State<MyDrawer> {
                               ),
                               actions: [
                                 ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            Color.fromARGB(255, 62, 70, 175),
+                                        foregroundColor: Colors.white),
                                     onPressed: () async {
                                       await task.addCategory(
                                           category: addCatcont.text);
@@ -86,11 +105,37 @@ class _MyDrawerState extends State<MyDrawer> {
                           );
                         },
                         icon: const Icon(
+                          color: Colors.white,
                           Icons.add_box,
                           size: 18,
                         ),
                       )
                     ],
+                  ),
+                  ListTile(
+                    onTap: () {
+                      task.sortList(index: -1);
+                      setState(() {
+                        isSelected = -1;
+                      });
+                    },
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                            bottomRight: Radius.circular(50),
+                            topRight: Radius.circular(50))),
+                    dense: true,
+                    tileColor: isSelected == -1
+                        ? Color.fromARGB(255, 172, 177, 244)
+                        : null,
+
+                    // selectedTileColor: Color.fromARGB(255, 246, 194, 202),
+                    leading: const Icon(
+                      Icons.label_important,
+                    ),
+                    title: Text(
+                      "Tasks",
+                      style: Utils.metaText(bold: true),
+                    ),
                   ),
                 ],
               ),
@@ -99,11 +144,9 @@ class _MyDrawerState extends State<MyDrawer> {
                   itemCount: task.catlist.length,
                   itemBuilder: (context, index) => ListTile(
                     onTap: () {
+                      task.sortList(index: index);
                       setState(() {
-                        task.sortedList = task.taskList
-                            .where((element) =>
-                                element.category == task.catlist[index])
-                            .toList();
+                        isSelected = index;
                       });
                     },
                     shape: const RoundedRectangleBorder(
@@ -111,14 +154,17 @@ class _MyDrawerState extends State<MyDrawer> {
                             bottomRight: Radius.circular(50),
                             topRight: Radius.circular(50))),
                     dense: true,
-                    selectedTileColor: Color.fromARGB(255, 246, 194, 202),
-                    selected: selected,
+                    tileColor: isSelected == index
+                        ? Color.fromARGB(255, 172, 177, 244)
+                        : null,
+
+                    // selectedTileColor: Color.fromARGB(255, 246, 194, 202),
                     leading: const Icon(
                       Icons.label_important,
                     ),
                     title: Text(
                       task.catlist[index],
-                      style: Utils.normalText(),
+                      style: Utils.metaText(bold: true),
                     ),
                   ),
                 ),
@@ -134,14 +180,16 @@ class _MyDrawerState extends State<MyDrawer> {
                       dense: true,
                       trailing: Switch(
                         activeColor: Colors.green,
-                        value: task.userData.isdark!,
+                        value: task.isDark,
                         onChanged: (value) {
-                          task.userData.isdark = value;
-                          task.userData.uref!
-                              .set(task.userData.toMap())
-                              .then((value) => task.getUser());
+                          // task.userData.isdark = value;
+                          // task.userData.uref!
+                          //     .set(task.userData.toMap())
+                          //     .then((value) => task.getUser());
                           // print(value);
-                          // task.isDarkTheme(value: value);
+                          setState(() {
+                            task.isDarkTheme(value: value);
+                          });
                         },
                       ),
                       title: Text(

@@ -78,115 +78,109 @@ class _AddTaskState extends State<AddTask> {
                       key: formkey,
                       child: Column(
                         children: [
-                          Column(
-                            children: [
-                              TypeAheadFormField(
-                                hideOnEmpty: true,
-                                textFieldConfiguration: TextFieldConfiguration(
-                                    style: TextStyle(fontSize: 14),
-                                    controller: catcont,
-                                    decoration:
-                                        Utils.myTextField(label: "Category")),
-                                suggestionsCallback: (pattern) {
-                                  return task.catlist.where((element) => element
-                                      .toLowerCase()
-                                      .contains(pattern.toLowerCase()));
-                                },
-                                itemBuilder: (context, suggestion) {
-                                  return ListTile(
-                                    title: Text(suggestion.toString()),
-                                  );
-                                },
-                                transitionBuilder:
-                                    (context, suggestionsBox, controller) {
-                                  return suggestionsBox;
-                                },
-                                onSuggestionSelected: (suggestion) {
-                                  catcont.text = suggestion.toString();
-                                },
-                                validator: (value) {
-                                  if (value!.isEmpty || value == null) {
-                                    return 'Select Category';
-                                  } else
-                                    return null;
-                                },
-                              ),
-                              const SizedBox(height: 20),
-                              DateTimeField(
+                          TypeAheadFormField(
+                            hideOnEmpty: true,
+                            textFieldConfiguration: TextFieldConfiguration(
+                                style: TextStyle(fontSize: 14),
+                                controller: catcont,
                                 decoration:
-                                    Utils.myTextField(label: "Due Date"),
-                                controller: dueDatecont,
-                                format: formatter,
-                                onShowPicker: (context, currentValue) async {
-                                  final date = await showDatePicker(
-                                      context: context,
-                                      firstDate: DateTime(1900),
-                                      initialDate:
-                                          currentValue ?? DateTime.now(),
-                                      lastDate: DateTime(2100));
-                                  if (date != null) {
-                                    final time = await showTimePicker(
-                                      context: context,
-                                      initialTime: TimeOfDay.fromDateTime(
-                                          currentValue ?? DateTime.now()),
-                                    );
-                                    return DateTimeField.combine(date, time);
-                                  } else {
-                                    print(currentValue);
-                                    return currentValue;
-                                  }
-                                },
-                                onChanged: (value) {},
-                                validator: (value) {
-                                  if (dueDatecont.text.isEmpty) {
-                                    return "Select Time";
-                                  } else
-                                    return null;
-                                },
-                              ),
-                              const SizedBox(height: 20),
-                              TextFormField(
-                                validator: (value) {
-                                  if (value!.isEmpty || value == null) {
-                                    return "Enter Title";
-                                  } else
-                                    return null;
-                                },
-                                decoration: Utils.myTextField(
-                                  label: "Title",
-                                ),
-                                onChanged: (value) {},
-                                controller: titlecont,
-                              ),
-                              const SizedBox(height: 20),
-                              QuillEditor(
-                                showCursor: true,
-                                scrollable: false,
-                                expands: false,
-                                padding: const EdgeInsets.all(8),
-                                scrollController: scrollController,
-                                autoFocus: true,
-                                focusNode: FocusNode(),
-                                controller: quillcont,
-                                readOnly: false,
-                              ),
-                              const SizedBox(height: 20),
-                            ],
+                                    Utils.myTextField(label: "Category")),
+                            suggestionsCallback: (pattern) {
+                              return task.catlist.where((element) => element
+                                  .toLowerCase()
+                                  .contains(pattern.toLowerCase()));
+                            },
+                            itemBuilder: (context, suggestion) {
+                              return ListTile(
+                                title: Text(suggestion.toString()),
+                              );
+                            },
+                            transitionBuilder:
+                                (context, suggestionsBox, controller) {
+                              return suggestionsBox;
+                            },
+                            onSuggestionSelected: (suggestion) {
+                              catcont.text = suggestion.toString();
+                            },
+                            validator: (value) {
+                              if (value!.isEmpty || value == null) {
+                                return 'Select Category';
+                              } else
+                                return null;
+                            },
                           ),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: [
-                                QuillToolbar.basic(
-                                  controller: quillcont,
-                                ),
-                              ],
+                          const SizedBox(height: 20),
+                          DateTimeField(
+                            decoration: Utils.myTextField(label: "Due Date"),
+                            controller: dueDatecont,
+                            format: formatter,
+                            onShowPicker: (context, currentValue) async {
+                              final date = await showDatePicker(
+                                  context: context,
+                                  firstDate: DateTime(1900),
+                                  initialDate: currentValue ?? DateTime.now(),
+                                  lastDate: DateTime(2100));
+                              if (date != null) {
+                                final time = await showTimePicker(
+                                  context: context,
+                                  initialTime: TimeOfDay.fromDateTime(
+                                      currentValue ?? DateTime.now()),
+                                );
+                                return DateTimeField.combine(date, time);
+                              } else {
+                                print(currentValue);
+                                return currentValue;
+                              }
+                            },
+                            onChanged: (value) {},
+                            validator: (value) {
+                              if (dueDatecont.text.isEmpty) {
+                                return "Select Time";
+                              } else
+                                return null;
+                            },
+                          ),
+                          const SizedBox(height: 20),
+                          TextFormField(
+                            validator: (value) {
+                              if (value!.isEmpty || value == null) {
+                                return "Enter Title";
+                              } else
+                                return null;
+                            },
+                            decoration: Utils.myTextField(
+                              label: "Title",
                             ),
+                            onChanged: (value) {},
+                            controller: titlecont,
                           ),
+                          const SizedBox(height: 20),
+                          QuillEditor(
+                            showCursor: true,
+                            scrollable: false,
+                            expands: false,
+                            padding: const EdgeInsets.all(8),
+                            scrollController: scrollController,
+                            autoFocus: true,
+                            focusNode: FocusNode(),
+                            controller: quillcont,
+                            readOnly: false,
+                          ),
+                          const SizedBox(height: 20),
                         ],
                       ),
                     ),
                   ),
+                ),
+              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    QuillToolbar.basic(
+                      controller: quillcont,
+                    ),
+                  ],
                 ),
               ),
               const Divider(

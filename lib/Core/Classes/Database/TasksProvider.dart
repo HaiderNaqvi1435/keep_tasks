@@ -11,12 +11,12 @@ class TasksProvider with ChangeNotifier {
     getCategories();
     getUser();
   }
-  // bool isDark = false;
-  // isDarkTheme({bool value = false}) {
-  //   isDark = value;
-  //   print(isDark);
-  //   notifyListeners();
-  // }
+  bool isDark = false;
+  isDarkTheme({bool? value}) {
+    isDark = value!;
+    print(isDark);
+    notifyListeners();
+  }
 
   TaskModel taskModel = TaskModel();
   UserData userData = UserData();
@@ -95,5 +95,17 @@ class TasksProvider with ChangeNotifier {
       notifyListeners();
     });
     notifyListeners();
+  }
+
+  sortList({required int index}) {
+    if (index >= 0) {
+      sortedList = taskList
+          .where((element) => element.category == catlist[index])
+          .toList();
+      notifyListeners();
+    } else {
+      sortedList = List.from(taskList);
+      notifyListeners();
+    }
   }
 }
