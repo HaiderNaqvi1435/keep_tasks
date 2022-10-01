@@ -58,19 +58,25 @@ class _AddTaskState extends State<AddTask> {
             actions: [
               IconButton(
                 onPressed: () async {
-                  if (istapped == false) {
-                    if (formkey.currentState!.validate()) {
-                      addData();
-                      task.addCategory(category: catcont.text);
+                  if (formkey.currentState!.validate()) {
+                    if (widget.taskModel == null) {
+                      if (istapped == false) {
+                        addData();
+                        task.addCategory(category: catcont.text);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Saved!")));
+                        setState(() {
+                          istapped = true;
+                        });
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Already Saved!")));
+                      }
+                    } else {
+                      updateData();
                       ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text("Saved!")));
                     }
-                    setState(() {
-                      istapped = true;
-                    });
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Already Saved!")));
                   }
                 },
                 icon: Icon(Icons.done),
@@ -224,40 +230,40 @@ class _AddTaskState extends State<AddTask> {
 
   addData() async {
     print("Adding...");
-    print("dialogue ");
-    print(FirebaseAuth.instance.currentUser!.uid);
     try {
-      if (widget.taskModel == null) {
-        TaskModel taskModel = TaskModel(
-          editTime: Timestamp.now(),
-          userID: FirebaseAuth.instance.currentUser!.uid,
-          category: catcont.text,
-          title: titlecont.text,
-          dueDate: dueDatecont.text,
-          discrp: jsonEncode(quillcont.document.toDelta().toJson()),
-        );
+      TaskModel taskModel = TaskModel(
+        editTime: Timestamp.now(),
+        userID: FirebaseAuth.instance.currentUser!.uid,
+        category: catcont.text,
+        title: titlecont.text,
+        dueDate: dueDatecont.text,
+        discrp: jsonEncode(quillcont.document.toDelta().toJson()),
+      );
 
-        await FirebaseFirestore.instance
-            .collection("Tasks")
-            .add(taskModel.toMap())
-            .then((value) async {
-          print("Added successfully");
-        });
-      } else {
-        widget.taskModel!.category = catcont.text;
-        widget.taskModel!.title = titlecont.text;
-        widget.taskModel!.dueDate = dueDatecont.text;
-        widget.taskModel!.discrp =
-            jsonEncode(quillcont.document.toDelta().toJson());
-        widget.taskModel!.editTime = Timestamp.now();
-        widget.taskModel!.reff!
-            .set(widget.taskModel!.toMap())
-            .then((value) async {});
-      }
+      await FirebaseFirestore.instance
+          .collection("Tasks")
+          .add(taskModel.toMap())
+          .then((value) async {
+        print("Added successfully");
+      });
+
       print("try ended");
     } catch (e) {
       print(e);
-      Navigator.of(context).pop();
     }
+  }
+
+  updateData() {
+    try {
+      widget.taskModel!.category = catcont.text;
+      widget.taskModel!.title = titlecont.text;
+      widget.taskModel!.dueDate = dueDatecont.text;
+      widget.taskModel!.discrp =
+          jsonEncode(quillcont.document.toDelta().toJson());
+      widget.taskModel!.editTime = Timestamp.now();
+      widget.taskModel!.reff!
+          .set(widget.taskModel!.toMap())
+          .then((value) async {});
+    } catch (e) {}
   }
 }
